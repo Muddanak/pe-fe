@@ -1,4 +1,4 @@
-#[allow(non_snake_case)]
+#[allow(non_snake_case, dead_code)]
 pub struct Header {
     pub HE_MACHINEINFO: u16,
     pub HE_SECTIONS: u16,

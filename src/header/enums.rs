@@ -33,7 +33,26 @@ pub static MACHINE: phf::Map<&'static str, i32> = phf_map!(
     "MACHINE_WCEMIPSV2" => 	    0x169,
 );
 
-pub static MACHINE2: phf::Map<i32, &'static str> = phf_map! {
+pub static CHARACTERISTICS: phf::Map<&'static str, i32> = phf_map!(
+    "RELOCS_STRIPPED"   =>          0x0001,
+    "EXECUTABLE_IMAGE"   =>         0x0002,
+    "LINE_NUMS_STRIPPED"   =>       0x0004,
+    "LOCAL_SYMS_STRIPPED"   =>      0x0008,
+    "AGGRESSIVE_WS_TRIM"   =>       0x0010,
+    "LARGE_ADDRESS_ AWARE"   =>     0x0020,
+    "RESERVED"   =>                 0x0040,
+    "BYTES_REVERSED_LO"   =>        0x0080,
+    "32BIT_MACHINE"   =>   	        0x0100,
+    "DEBUG_STRIPPED"   =>   	    0x0200,
+    "REMOVABLE_RUN_ FROM_SWAP"   => 0x0400,
+    "NET_RUN_FROM_SWAP"   =>  	    0x0800,
+    "SYSTEM"   =>  	                0x1000,
+    "DLL"   =>   	                0x2000,
+    "UP_SYSTEM_ONLY"   =>   	    0x4000,
+    "BYTES_REVERSED_HI"   =>   	    0x8000
+
+);
+/*pub static MACHINE2: phf::Map<i32, &'static str> = phf_map! {
     0x0i32          => "MACHINE_UNKNOWN",
     0x184i32 	    => "MACHINE_ALPHA",
     0x284i32 	    => "MACHINE_ALPHA64/AXP64 ",
@@ -64,4 +83,4 @@ pub static MACHINE2: phf::Map<i32, &'static str> = phf_map! {
     0x1a8i32	    => "MACHINE_SH5 ",
     0x1c2i32	    => "MACHINE_THUMB",
     0x169i32	    => "MACHINE_WCEMIPSV2"
-};
+};*/
