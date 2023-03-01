@@ -1,5 +1,16 @@
 use phf::phf_map;
 
+///
+///
+/// Errors
+/// Current:
+///
+///
+pub enum FileErrors {
+    CouldNotOpenFile(std::io::Error),
+}
+
+#[allow(dead_code)]
 pub static MACHINE: phf::Map<&'static str, i32> = phf_map!(
     "MACHINE_UNKNOWN" =>        0x0,
     "MACHINE_ALPHA" => 	        0x184,
@@ -33,6 +44,7 @@ pub static MACHINE: phf::Map<&'static str, i32> = phf_map!(
     "MACHINE_WCEMIPSV2" => 	    0x169,
 );
 
+#[allow(dead_code)]
 pub static CHARACTERISTICS: phf::Map<&'static str, i32> = phf_map!(
     "RELOCS_STRIPPED"   =>          0x0001,
     "EXECUTABLE_IMAGE"   =>         0x0002,

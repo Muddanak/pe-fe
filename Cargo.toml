@@ -8,4 +8,5 @@ author = "Muddanak"
 
 [dependencies]
 clap = { version = "4.1.8", features = ["derive"] }
+hex = "0.4.3"
 phf = { version = "0.11.1", features = ["macros"] }
