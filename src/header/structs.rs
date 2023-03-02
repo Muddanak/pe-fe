@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 #[allow(non_snake_case, dead_code)]
 #[derive(Debug, Clone)]
 pub struct Header {
@@ -24,3 +26,16 @@ impl Header {
     }
 }
 
+impl Display for Header{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f,
+               "Machine Info:\t\t{}\n\
+                Sections:\t\t{}\n\
+                DateStamp:\t\t{}\n\
+                P2 Symbols:\t\t{}\n\
+                Number Symbols:\t\t{}\n\
+                Optional:\t\t{}\n\
+                Characteristics:\t{}",
+               self.HE_MACHINEINFO, self.HE_SECTIONS, self.HE_DATESTAMP, self.HE_P2SYMBOLS, self.HE_NUMSYMBOLS, self.HE_OPTIONAL, self.HE_CHARACTERISTICS)
+    }
+}
