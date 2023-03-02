@@ -1,6 +1,8 @@
 use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
 use std::io::Read;
+use byteorder::{ByteOrder, LittleEndian};
+use crate::header::structs::Header;
 
 #[allow(dead_code)]
 #[derive(Debug, PartialEq)]
@@ -10,6 +12,7 @@ pub enum FileError {
     NoMZinFile,
     CouldNotGetOffset,
     PEisNotHere,
+    PEInvalid,
 }
 
 impl Display for FileError {
@@ -27,6 +30,7 @@ impl Display for FileError {
                 write!(f, "Somehow the offset 0x3c was unable to be found")
             },
             FileError::PEisNotHere => write!(f, "The PE header was not found at the provided offset"),
+            FileError::PEInvalid => write!(f, "The PE is invalid, somehow?")
         }
     }
 }
@@ -45,33 +49,39 @@ pub fn get_first_kilobyte(mut filename: File) -> Vec<u8> {
 }
 
 pub fn get_pe_offset(chunk: &[u8]) -> Result<usize, FileError> {
-    let val = chunk[0x3c] as usize;
-    let offset = match chunk.get(val) {
-        Some(x) => *x as usize,
-        None => usize::MAX,
-    };
 
-    if offset == usize::MAX {
+    if let Some(val) = chunk.get(0x3c) {
+        if *val == 0 {
+            return Err(FileError::OffsetPEisZero)
+        }
+        Ok(*val as usize)
+    } else {
+        Err(FileError::PEisNotHere)
+    }
+
+
+
+    //let val = chunk[0x3c] as usize;
+    //dbg!(val);
+
+    /*if offset == usize::MAX {
         Err(FileError::CouldNotGetOffset)
     } else if offset == 0 {
         Err(FileError::OffsetPEisZero)
     } else {
         Ok(offset)
-    }
+    }*/
 }
 
-pub fn verify_pe_header(slice: &[u8]) -> Result<(), FileError> {
-
-    if let Ok(pe) = String::from_utf8(Vec::from(slice)) {
-        if pe != "PE\0\0" {
-            return Err(FileError::PEisNotHere)
-        }
-    }
-    println!("PE header has been verified and found!");
-    Ok(())
+pub fn verify_pe_header(slice: &[u8]) -> String {
+    let pe = match String::from_utf8(Vec::from(slice)) {
+        Ok(pe) => pe,
+        Err(e) => format!("{}", e)
+    };
+    pe
 }
 
-pub fn usize_to_hex(value: usize) -> usize {
+pub fn _usize_to_hex(value: usize) -> usize {
    // if let Ok(val) = usize::from_str_radix(&value.to_string(), 16) {
     let val = match usize::from_str_radix(&value.to_string(), 16) {
         Ok(x) => x,
@@ -93,7 +103,6 @@ pub fn usize_to_hex(value: usize) -> usize {
 ///
 ///
 pub fn check_for_mz(chunk: &[u8]) -> Result<(), FileError> {
-    //let first_two = chunk[0..=1].iter().map(|x| *x as char).collect::<String>();
     if let Ok(first_two) = String::from_utf8(Vec::from(chunk)) {
         //dbg!(&first_two);
         if first_two != "MZ" {
@@ -104,17 +113,37 @@ pub fn check_for_mz(chunk: &[u8]) -> Result<(), FileError> {
     Ok(())
 }
 
-/*pub fn check_for_mz2(chunk: &str) -> Result<(), FileError> {
-    //let first_two = chunk[0..=1].iter().map(|x| *x as char).collect::<String>();
-    if chunk != "MZ" {
-        return Err(FileError::NoMZinFile)
+
+///
+/// make_header_from_info
+///
+pub fn make_header_from_info(chunk: &[u8], offset: usize) -> Header {
+    let sizes = [2,2,4,4,4,2,2];
+    let mut cur = offset+4;
+    let mut hold: Vec<String> = Vec::new();
+
+
+    for size in sizes {
+
+        if size == 2 {
+            hold.push(LittleEndian::read_u16(&chunk[cur..cur+size]).to_string());
+        } else {
+            hold.push(LittleEndian::read_u32(&chunk[cur..cur+size]).to_string());
+        }
+
+        cur += size;
     }
 
-    Ok(())
-}*/
-
-
-
+    Header::new(
+        hold[0].clone(),
+        hold[1].clone(),
+        hold[2].clone(),
+        hold[3].clone(),
+        hold[4].clone(),
+        hold[5].clone(),
+        hold[6].clone(),
+    )
+}
 
 ///
 ///
