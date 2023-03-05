@@ -1,9 +1,12 @@
+use std::collections::{HashMap, HashSet};
 use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
+use std::hash::Hash;
 use std::io::Read;
 use byteorder::{ByteOrder, LittleEndian};
-use chrono::{DateTime, Utc};
-use crate::header::enums::MACHINE;
+use phf::{Map, phf_map};
+
+use crate::header::enums::{CHARACTERISTICS, MACHINE};
 use crate::header::structs::Header;
 
 #[allow(dead_code)]
@@ -130,6 +133,8 @@ pub fn make_header_from_info(chunk: &[u8], offset: usize) -> Header {
     let sizes = [2,2,4,4,4,2,2];
     let mut cur = offset+4;
     let mut hold: Vec<String> = Vec::new();
+    let mut characteristics_vec: Vec<String> = Vec::new();
+    let mut new_header = Header::new();
 
 
     for size in sizes {
@@ -147,37 +152,41 @@ pub fn make_header_from_info(chunk: &[u8], offset: usize) -> Header {
     /*let dt = chrono::NaiveDateTime::from_timestamp_millis("1677768407".parse::<i64>().unwrap() ).unwrap();
     dbg!( DateTime::<Utc>::from_utc(dt, Utc));*/
 
-    let m1: u16 = hold[0].parse().unwrap();
-    let m2: u16 = hold[1].parse().unwrap();
-    let m3: u32 = hold[2].parse().unwrap();
-    let m4: u32 = hold[3].parse().unwrap();
-    let m5: u32 = hold[4].parse().unwrap();
-    let m6: u16 = hold[5].parse().unwrap();
-    let m7: u16 = hold[6].parse().unwrap();
+    let machine_id_num: u16 = hold[0].parse().unwrap();
+    let _sections_id_num: u16 = hold[1].parse().unwrap();
+    let _m3: u32 = hold[2].parse().unwrap();
+    let _m4: u32 = hold[3].parse().unwrap();
+    let _m5: u32 = hold[4].parse().unwrap();
+    let _m6: u16 = hold[5].parse().unwrap();
+    let characteristics_id_num: u16 = hold[6].parse().unwrap();
 
-    for (k,v) in MACHINE.into_iter() {
-        if *v as u16 == m1 {
-            hold.push(String::from(*k));
+    //dbg!(characteristics_id_num);
+
+    if let Some((machine, _machine_id)) = MACHINE.into_iter().find(|(_x, y)| **y as u16 == machine_id_num){
+        //valhold.push(String::from(*machine))
+        new_header.HE_MACHINEINFO = String::from(*machine)
+    }
+
+    for (charac, charac_id) in CHARACTERISTICS.into_iter() {
+        if characteristics_id_num & *charac_id as u16 != 0 {
+            characteristics_vec.push(String::from(*charac));
         }
     }
-
-    //let mw: String = MACHINE.into_iter().filter(|(x, y)| **y as u16 == m1).collect();
-
-    if let Some((mw, me)) = MACHINE.into_iter().find(|(x, y)| **y as u16 == m1){
-        println!("machine some {}", *mw);
-    }
+    new_header.HE_CHARACTERISTICS = characteristics_vec.join(", ");
 
 
-
-    Header::new(
-        hold[7].clone(),
+    /*Header::create(
+        hold[0].clone(),
         hold[1].clone(),
         hold[2].clone(),
         hold[3].clone(),
         hold[4].clone(),
         hold[5].clone(),
+        //valhold[1] is going to change, make sure to fix later after implementing other enums
         hold[6].clone(),
-    )
+    )*/
+
+    new_header
 
 
 }

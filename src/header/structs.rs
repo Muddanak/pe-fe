@@ -13,7 +13,7 @@ pub struct Header {
 }
 
 impl Header {
-    pub fn new(machine: String, sections: String, datestamp: String, p2symbols: String, numsymbols: String, optional: String, characteristics: String) -> Self {
+    pub fn create(machine: String, sections: String, datestamp: String, p2symbols: String, numsymbols: String, optional: String, characteristics: String) -> Self {
         Self {
             HE_MACHINEINFO: machine,
             HE_SECTIONS: sections,
@@ -22,6 +22,18 @@ impl Header {
             HE_NUMSYMBOLS: numsymbols,
             HE_OPTIONAL: optional,
             HE_CHARACTERISTICS: characteristics,
+        }
+    }
+
+    pub fn new() -> Self {
+        Self {
+            HE_MACHINEINFO: "".to_string(),
+            HE_SECTIONS: "".to_string(),
+            HE_DATESTAMP: "".to_string(),
+            HE_P2SYMBOLS: "".to_string(),
+            HE_NUMSYMBOLS: "".to_string(),
+            HE_OPTIONAL: "".to_string(),
+            HE_CHARACTERISTICS: "".to_string(),
         }
     }
 }
