@@ -1,11 +1,7 @@
 use byteorder::{ByteOrder, LittleEndian};
-use chrono::{Local, NaiveDate, NaiveDateTime, TimeZone, Utc};
-use clap::builder::TypedValueParser;
-use phf::{phf_map, Map};
-use std::collections::{HashMap, HashSet};
+use chrono::{Local, TimeZone, Utc};
 use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
-use std::hash::Hash;
 use std::io::Read;
 
 use crate::header::enums::{CHARACTERISTICS, MACHINE};
@@ -130,9 +126,10 @@ pub fn check_for_mz(chunk: &[u8]) -> Result<(), FileError> {
         if first_two != "MZ" {
             return Err(FileError::NoMZinFile);
         }
+        return Ok(())
     }
+    Err(FileError::NoMZinFile)
 
-    Ok(())
 }
 
 ///

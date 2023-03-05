@@ -21,7 +21,8 @@ pub struct Header {
 }
 
 impl Header {
-    pub fn create(
+    #[allow(clippy::too_many_arguments)]
+    pub fn _create(
         machine: String,
         sections: String,
         datestamp: String,
@@ -91,7 +92,7 @@ impl Display for Header {
             Pointer to Symbols:\t{}\t\t\t\t\t{}\n\
             Number Symbols:\t\t{}\t\t\t\t\t{}\n\
             Optional:\t\t{}\t\t\t\t\t{}\n\
-            Characteristics:\t{}\t\t\t\t{}",
+            Characteristics:\t{}\t{}",
             self.HE_MACHINEINFO, self.HE_MACHINEINFO_OFFSET,
             self.HE_SECTIONS, self.HE_SECTIONS_OFFSET,
             self.HE_DATESTAMP_UTC, self.HE_DATESTAMP_OFFSET,
