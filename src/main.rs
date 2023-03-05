@@ -5,8 +5,6 @@ use crate::header::functions::*;
 use clap::Parser;
 use std::fs::File;
 
-
-
 #[derive(Parser, Debug)]
 #[command(author, version)]
 struct Args {
@@ -33,7 +31,6 @@ fn main() {
             let tmp = make_header_from_info(&info, val_for_pe);
             println!("{}", tmp)
         }
-        Err(e) => println!("{e}")
+        Err(e) => println!("{e}"),
     }
-
 }
