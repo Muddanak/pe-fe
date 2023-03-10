@@ -99,12 +99,18 @@ pub fn _usize_to_hex(value: usize) -> usize {
 /// Concept:  Grabs the first two characters of the
 ///
 ///
-pub fn check_for_mz(chunk: &[u8]) -> Result<(), PEFILEERROR> {
+pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
 
     let text_mz :[u8; 2] = 0x4D5A_u16.to_be_bytes();
 
     if text_mz.iter().all(|item| chunk.contains(item)) {
-        Ok(())
+        let (offset, _) = chunk.iter()
+            .enumerate()
+            .find(|(_, item)| text_mz.contains(item) )
+            .unwrap();
+
+
+        Ok(offset)
     } else {
         Err(NoMZinFile)
     }
