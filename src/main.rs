@@ -20,9 +20,14 @@ fn main() {
         //let test_pe :[u8; 4] = 0x50450000_u32.to_be_bytes();
 
         let chunk :Vec<u8> = get_large_data_chunk(success);
-        if check_for_mz(&chunk[..=50]).is_ok() {
+        match check_for_mz(&chunk[..=50]) {
+            Ok(()) => {
 
 
+
+
+            }
+            Err(e) => println!("{e}")
         }
     } else {
         println!("Could not successfully open the file: {}", &args.filename)
