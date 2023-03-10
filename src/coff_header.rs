@@ -1,59 +1,38 @@
+pub mod enums;
+pub mod structs;
+
 use byteorder::{ByteOrder, LittleEndian};
 use chrono::{Local, TimeZone, Utc};
-use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
 use std::io::Read;
 
-use crate::header::enums::{CHARACTERISTICS, MACHINE};
-use crate::header::structs::Header;
+use crate::coff_header::enums::{CHARACTERISTICS, PEFILEERROR, MACHINE};
+use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
+use crate::coff_header::structs::Header;
 
-#[allow(dead_code)]
-#[derive(Debug, PartialEq)]
-pub enum FileError {
-    CouldNotGetData,
-    OffsetPEisZero,
-    NoMZinFile,
-    CouldNotGetOffset,
-    PEisNotHere,
-    PEInvalid,
-}
-
-impl Display for FileError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            FileError::CouldNotGetData => {
-                write!(f, "Could not successfully get data from the file")
-            }
-            FileError::OffsetPEisZero => write!(
-                f,
-                "The value located at offset 0x3c was zero, file might not be a PE"
-            ),
-            FileError::NoMZinFile => write!(f, "The identifier 'MZ' was not located in the header"),
-            FileError::CouldNotGetOffset => {
-                write!(f, "Somehow the offset 0x3c was unable to be found")
-            }
-            FileError::PEisNotHere => {
-                write!(f, "The PE header was not found at the provided offset")
-            }
-            FileError::PEInvalid => write!(f, "The PE is invalid, somehow?"),
-        }
-    }
-}
-
-impl std::error::Error for FileError {}
-
-pub fn get_first_kilobyte(mut filename: File) -> Vec<u8> {
+pub fn _get_first_kilobyte(mut filename: File) -> Vec<u8> {
     let mut chunk = [0; 0x400];
 
     let _filename_check = match filename.read_exact(&mut chunk) {
         Ok(_success) => Ok(()),
-        Err(_e) => Err(FileError::CouldNotGetData),
+        Err(_e) => Err(PEFILEERROR::CouldNotGetData),
     };
 
     Vec::from(chunk)
 }
 
-pub fn _get_pe_offset(chunk: &[u8]) -> Result<usize, FileError> {
+pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
+    let mut chunk = [0; 0x900];
+
+    let _filename_check = match filename.read_exact(&mut chunk) {
+        Ok(_success) => Ok(()),
+        Err(_e) => Err(PEFILEERROR::CouldNotGetData),
+    };
+
+    Vec::from(chunk)
+}
+
+/*pub fn _get_pe_offset(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
     let mut val: usize = *chunk.get(0x3c).unwrap() as usize;
     println!("val first is {val}");
 
@@ -71,17 +50,18 @@ pub fn _get_pe_offset(chunk: &[u8]) -> Result<usize, FileError> {
     }
     //dbg!(&chunk[val..val+4]);
     Ok(val)
-}
+}*/
 
-pub fn _verify_pe_header(slice: &[u8]) -> String {
+/*pub fn _verify_pe_header(slice: &[u8]) -> String {
     let pe = match String::from_utf8(Vec::from(slice)) {
         Ok(pe) => pe,
         Err(e) => format!("{}", e),
     };
     pe
 }
+*/
 
-pub fn get_pe_header(chunk: &[u8]) -> usize {
+pub fn _get_pe_header(chunk: &[u8]) -> usize {
     let mut val: usize = *chunk.get(0x3c).unwrap() as usize;
     if val == 0 {
         for slot in 0..chunk.len() {
@@ -100,7 +80,6 @@ pub fn get_pe_header(chunk: &[u8]) -> usize {
 }
 
 pub fn _usize_to_hex(value: usize) -> usize {
-    // if let Ok(val) = usize::from_str_radix(&value.to_string(), 16) {
     let val = match usize::from_str_radix(&value.to_string(), 16) {
         Ok(x) => x,
         Err(_e) => 0,
@@ -120,22 +99,21 @@ pub fn _usize_to_hex(value: usize) -> usize {
 /// Concept:  Grabs the first two characters of the
 ///
 ///
-pub fn check_for_mz(chunk: &[u8]) -> Result<(), FileError> {
-    if let Ok(first_two) = String::from_utf8(Vec::from(chunk)) {
-        //dbg!(&first_two);
-        if first_two != "MZ" {
-            return Err(FileError::NoMZinFile);
-        }
-        return Ok(())
-    }
-    Err(FileError::NoMZinFile)
+pub fn check_for_mz(chunk: &[u8]) -> Result<(), PEFILEERROR> {
 
+    let text_mz :[u8; 2] = 0x4D5A_u16.to_be_bytes();
+
+    if text_mz.iter().all(|item| chunk.contains(item)) {
+        Ok(())
+    } else {
+        Err(NoMZinFile)
+    }
 }
 
 ///
 /// make_header_from_info
 ///
-pub fn make_header_from_info(chunk: &[u8], offset: usize) -> Header {
+pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> Header {
     let sizes = [2, 2, 4, 4, 4, 2, 2];
     let mut cur = offset + 4;
     let mut hold: Vec<String> = Vec::new();

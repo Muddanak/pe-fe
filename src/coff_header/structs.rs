@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 
-#[allow(non_snake_case, dead_code)]
+#[allow(non_snake_case)]
 #[derive(Debug, Clone)]
 pub struct Header {
     pub HE_MACHINEINFO: String,
@@ -59,6 +59,7 @@ impl Header {
         }
     }
 
+    #[allow(dead_code)]
     pub fn new() -> Self {
         Self {
             HE_MACHINEINFO: "".to_string(),
@@ -84,7 +85,7 @@ impl Display for Header {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Name of header\t\tInfo of Header\t\t\t\tOffset\n\
+            "Name of coff_header\t\tInfo of Header\t\t\t\tOffset\n\
             Machine Info:\t\t{}\t\t\t\t{}\n\
             Sections:\t\t{}\t\t\t\t\t{}\n\
             DateStamp:\t\t{}\t\t{}\n\

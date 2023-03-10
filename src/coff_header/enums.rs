@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use phf::phf_map;
 
 ///
@@ -6,8 +7,43 @@ use phf::phf_map;
 /// Current:
 ///
 ///
-pub enum FileErrors {
+pub enum _FileErrors {
     CouldNotOpenFile(std::io::Error),
+}
+
+#[allow(dead_code, clippy::upper_case_acronyms)]
+#[derive(Debug, PartialEq)]
+pub enum PEFILEERROR {
+    CouldNotGetData,
+    OffsetPEisZero,
+    NoMZinFile,
+    CouldNotGetOffset,
+    PEisNotHere,
+    PEInvalid,
+}
+
+impl std::error::Error for PEFILEERROR {}
+
+impl Display for PEFILEERROR {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PEFILEERROR::CouldNotGetData => {
+                write!(f, "Could not successfully get data from the file")
+            }
+            PEFILEERROR::OffsetPEisZero => write!(
+                f,
+                "The value located at offset 0x3c was zero, file might not be a PE"
+            ),
+            PEFILEERROR::NoMZinFile => write!(f, "The identifier 'MZ' was not located in the coff_header"),
+            PEFILEERROR::CouldNotGetOffset => {
+                write!(f, "Somehow the offset 0x3c was unable to be found")
+            }
+            PEFILEERROR::PEisNotHere => {
+                write!(f, "The PE coff_header was not found at the provided offset")
+            }
+            PEFILEERROR::PEInvalid => write!(f, "The PE is invalid, somehow?"),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -64,35 +100,3 @@ pub static CHARACTERISTICS: phf::Map<&'static str, i32> = phf_map!(
     "BYTES_REVERSED_HI"   =>   	    0x8000
 
 );
-/*pub static MACHINE2: phf::Map<i32, &'static str> = phf_map! {
-    0x0i32          => "MACHINE_UNKNOWN",
-    0x184i32 	    => "MACHINE_ALPHA",
-    0x284i32 	    => "MACHINE_ALPHA64/AXP64 ",
-    0x1d3i32 	    => "MACHINE_AM33 ",
-    0x8664i32 	    => "MACHINE_AMD64 ",
-    0x1c0i32 	    => "MACHINE_ARM ",
-    0xaa64i32 	    => "MACHINE_ARM64",
-    0x1c4i32 	    => "MACHINE_ARMNT ",
-    //0x284i32 	    => "MACHINE_AXP64 ",
-    0xebci32 	    => "MACHINE_EBC ",
-    0x14ci32 	    => "MACHINE_I386 ",
-    0x200i32 	    => "MACHINE_IA64 ",
-    0x6232i32 	    => "MACHINE_LOONGARCH32",
-    0x6264i32 	    => "MACHINE_LOONGARCH64 ",
-    0x9041i32 	    => "MACHINE_M32R ",
-    0x266i32 	    => "MACHINE_MIPS16",
-    0x366i32 	    => "MACHINE_MIPSFPU",
-    0x466i32 	    => "MACHINE_MIPSFPU16",
-    0x1f0i32 	    => "MACHINE_POWERPC ",
-    0x1f1i32 	    => "MACHINE_POWERPCFP",
-    0x166i32 	    => "MACHINE_R4000 ",
-    0x5032i32 	    => "MACHINE_RISCV32",
-    0x5064i32 	    => "MACHINE_RISCV64 ",
-    0x5128i32	    => "MACHINE_RISCV128 ",
-    0x1a2i32	    => "MACHINE_SH3 ",
-    0x1a3i32	    => "MACHINE_SH3DSP",
-    0x1a6i32	    => "MACHINE_SH4 ",
-    0x1a8i32	    => "MACHINE_SH5 ",
-    0x1c2i32	    => "MACHINE_THUMB",
-    0x169i32	    => "MACHINE_WCEMIPSV2"
-};*/
