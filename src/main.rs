@@ -24,11 +24,10 @@ fn main() {
 
 
         let chunk :Vec<u8> = get_large_data_chunk(success);
-        let dos_header_data = &chunk[0..=0x64];
+        let dos_header_data = &chunk[0..=254];
         match check_for_mz(dos_header_data) {
             Ok(mz_offset) => {
                 let header_dos = make_dos_header(dos_header_data, mz_offset);
-
                 println!("{header_dos}");
 
 
