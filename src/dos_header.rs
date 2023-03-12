@@ -34,11 +34,12 @@ fn check_for_stub(data: &[u8]) -> bool {
 fn get_rich_xor(data: &[u8]) -> u32 {
 
     //The word "Rich" in hex
-    let rich:[u8;4] = 0x52696368_u32.to_be_bytes();
+    //let rich:[u8;4] = 0x52696368_u32.to_be_bytes();
+
 
     let (offset, _) = data.iter()
         .enumerate()
-        .find(|(_, item)| rich.contains(item) )
+        .find(|(_, item)| "Rich".as_bytes().contains(item) )
         .unwrap();
     BigEndian::read_u32(&data[offset+4..offset+8])
 }

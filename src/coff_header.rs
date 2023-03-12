@@ -101,12 +101,12 @@ pub fn _usize_to_hex(value: usize) -> usize {
 ///
 pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
 
-    let text_mz :[u8; 2] = 0x4D5A_u16.to_be_bytes();
+    //let text_mz :[u8; 2] = 0x4D5A_u16.to_be_bytes();
 
-    if text_mz.iter().all(|item| chunk.contains(item)) {
+    if "MZ".chars().all(|item| chunk.contains(&(item as u8))) {
         let (offset, _) = chunk.iter()
             .enumerate()
-            .find(|(_, item)| text_mz.contains(item) )
+            .find(|(_, item)| "MZ".as_bytes().contains(item) )
             .unwrap();
 
 
