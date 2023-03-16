@@ -24,7 +24,7 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
 
         header.rich_ids = get_rich_data(&data[cur..header.ox3c_offset],  header.rich_xor_key);
 
-        print_rich_ids(&header);
+        //print_rich_ids(&header);
     }
 
 
@@ -80,12 +80,22 @@ fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
 
 pub fn print_rich_ids(header: &DosHeader) {
 
+    //todo when I get back here later on
+    //Some point
+
     println!("Rich ID Information");
     let signature = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes())).unwrap();
     println!("Signature Verification (Should be 'DanS'): {}", signature);
 
-    for item in 4..header.rich_ids.len() {
-        println!("{}", header.rich_ids[item])
+    //let test = u16::try_from(header.rich_ids[4]).expect("Whoopsie");
+    let mut test2 = header.rich_ids[4];
+    test2 &= 0x0000FFFF;
+    test2 <<= 2;
+
+    dbg!(test2);
+    for item in (4..header.rich_ids.len()/2).step_by(2) {
+        println!("{} {}", header.rich_ids[item], header.rich_ids[item+1]);
     }
+
 
 }

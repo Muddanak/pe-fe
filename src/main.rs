@@ -26,7 +26,7 @@ fn main() {
 
     let mz_offset = check_for_mz(dos_header_data).unwrap_or_else(|_| { println!("{}", NoMZinFile); process::exit(1); });
     let header_dos = make_dos_header(dos_header_data, mz_offset);
-    println!("{header_dos}");
-    print_rich_ids(&header_dos);
+    println!("{}", header_dos);
+    //print_rich_ids(&header_dos);
 
 }
