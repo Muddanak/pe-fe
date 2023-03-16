@@ -94,14 +94,22 @@ impl Display for Header {
             Number Symbols:\t\t{}\t\t\t\t\t{}\n\
             Optional:\t\t{}\t\t\t\t\t{}\n\
             Characteristics:\t{}\t{}",
-            self.HE_MACHINEINFO, self.HE_MACHINEINFO_OFFSET,
-            self.HE_SECTIONS, self.HE_SECTIONS_OFFSET,
-            self.HE_DATESTAMP_UTC, self.HE_DATESTAMP_OFFSET,
-            self.HE_DATESTAMP_LOC, self.HE_DATESTAMP_OFFSET,
-            self.HE_POINTERTOSYMBOLS, self.HE_POINTERTOSYMBOLS_OFFSET,
-            self.HE_NUMBEROFSYMBOLS, self.HE_NUMBEROFSYMBOLS_OFFSET,
-            self.HE_OPTIONAL, self.HE_OPTIONAL_OFFSET,
-            self.HE_CHARACTERISTICS, self.HE_CHARACTERISTICS_OFFSET,
+            self.HE_MACHINEINFO,
+            self.HE_MACHINEINFO_OFFSET,
+            self.HE_SECTIONS,
+            self.HE_SECTIONS_OFFSET,
+            self.HE_DATESTAMP_UTC,
+            self.HE_DATESTAMP_OFFSET,
+            self.HE_DATESTAMP_LOC,
+            self.HE_DATESTAMP_OFFSET,
+            self.HE_POINTERTOSYMBOLS,
+            self.HE_POINTERTOSYMBOLS_OFFSET,
+            self.HE_NUMBEROFSYMBOLS,
+            self.HE_NUMBEROFSYMBOLS_OFFSET,
+            self.HE_OPTIONAL,
+            self.HE_OPTIONAL_OFFSET,
+            self.HE_CHARACTERISTICS,
+            self.HE_CHARACTERISTICS_OFFSET,
         )
     }
 }

@@ -1,5 +1,5 @@
-use std::fmt::{Display, Formatter};
 use phf::phf_map;
+use std::fmt::{Display, Formatter};
 
 ///
 ///
@@ -34,7 +34,9 @@ impl Display for PEFILEERROR {
                 f,
                 "The value located at offset 0x3c was zero, file might not be a PE"
             ),
-            PEFILEERROR::NoMZinFile => write!(f, "The identifier 'MZ' was not located in the DOS header"),
+            PEFILEERROR::NoMZinFile => {
+                write!(f, "The identifier 'MZ' was not located in the DOS header")
+            }
             PEFILEERROR::CouldNotGetOffset => {
                 write!(f, "Somehow the offset 0x3c was unable to be found")
             }

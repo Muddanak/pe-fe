@@ -6,23 +6,12 @@ use chrono::{Local, TimeZone, Utc};
 use std::fs::File;
 use std::io::Read;
 
-use crate::coff_header::enums::{CHARACTERISTICS, PEFILEERROR, MACHINE};
 use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
+use crate::coff_header::enums::{CHARACTERISTICS, MACHINE, PEFILEERROR};
 use crate::coff_header::structs::Header;
 
 pub fn _get_first_kilobyte(mut filename: File) -> Vec<u8> {
     let mut chunk = [0; 0x400];
-
-    let _filename_check = match filename.read_exact(&mut chunk) {
-        Ok(_success) => Ok(()),
-        Err(_e) => Err(PEFILEERROR::CouldNotGetData),
-    };
-
-    Vec::from(chunk)
-}
-
-pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
-    let mut chunk = [0; 0x900];
 
     let _filename_check = match filename.read_exact(&mut chunk) {
         Ok(_success) => Ok(()),
@@ -46,14 +35,12 @@ pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
 ///
 pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
 
-    //let text_mz :[u8; 2] = 0x4D5A_u16.to_be_bytes();
-
     if "MZ".chars().all(|item| chunk.contains(&(item as u8))) {
-        let (offset, _) = chunk.iter()
+        let (offset, _) = chunk
+            .iter()
             .enumerate()
-            .find(|(_, item)| "MZ".as_bytes().contains(item) )
+            .find(|(_, item)| "MZ".as_bytes().contains(item))
             .unwrap();
-
 
         Ok(offset)
     } else {
@@ -75,13 +62,11 @@ pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> Header {
     for size in sizes {
         if size == 2 {
             hold.push(LittleEndian::read_u16(&chunk[cur..cur + size]).to_string());
-
         } else {
             hold.push(LittleEndian::read_u32(&chunk[cur..cur + size]).to_string());
         }
         offsets.push(cur);
         cur += size;
-
     }
 
     //dbg!(offsets);
@@ -120,7 +105,6 @@ pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> Header {
             .unwrap()
     );
     new_header.HE_DATESTAMP_OFFSET = format!("0x{:X}", offsets[2]);
-
 
     //Get Pointer to Table Symbols
     //This may just be flat 0 (zero) as it may have been deprecated
