@@ -1,20 +1,20 @@
 use std::fmt::{Display, Formatter};
 
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct DosHeader {
     pub mz_offset: usize,
     pub ox3c_offset: usize,
     pub has_stub: bool,
     pub has_rich: bool,
     pub rich_xor_key: u32,
-    pub rich_ids: Vec<RichHeader>,
+    pub rich_ids: Vec<u32>,
 }
 
-#[derive(Debug)]
+/*#[derive(Debug)]
 pub struct RichHeader {
     pub rich_id: u64
-}
+}*/
 
 impl Display for DosHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -27,13 +27,6 @@ impl Display for DosHeader {
 #[allow(dead_code)]
 impl DosHeader {
     pub fn new() -> Self {
-        Self {
-            mz_offset: 0,
-            ox3c_offset: 0,
-            has_stub: false,
-            has_rich: false,
-            rich_xor_key: 0x00000000,
-            rich_ids: Vec::new(),
-        }
+        Default::default()
     }
 }
