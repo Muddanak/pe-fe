@@ -2,10 +2,9 @@ mod coff_header;
 mod dos_header;
 mod utils;
 
-use crate::coff_header::check_for_mz;
 use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
-use crate::dos_header::{make_dos_header, print_rich_sha256_hash};
-use crate::utils::get_large_data_chunk;
+use crate::dos_header::{make_dos_header, print_rich_sha256_hash, check_for_mz};
+use crate::utils::{get_large_data_chunk};
 use clap::Parser;
 use std::fs::File;
 use std::process;

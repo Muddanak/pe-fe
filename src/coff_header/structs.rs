@@ -1,87 +1,33 @@
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 #[allow(non_snake_case)]
-#[derive(Debug, Clone)]
-pub struct Header {
-    pub HE_MACHINEINFO: String,
-    pub HE_SECTIONS: String,
-    pub HE_DATESTAMP_UTC: String,
-    pub HE_DATESTAMP_LOC: String,
-    pub HE_POINTERTOSYMBOLS: String,
-    pub HE_NUMBEROFSYMBOLS: String,
-    pub HE_OPTIONAL: String,
-    pub HE_CHARACTERISTICS: String,
-    pub HE_MACHINEINFO_OFFSET: String,
-    pub HE_SECTIONS_OFFSET: String,
-    pub HE_DATESTAMP_OFFSET: String,
-    pub HE_POINTERTOSYMBOLS_OFFSET: String,
-    pub HE_NUMBEROFSYMBOLS_OFFSET: String,
-    pub HE_OPTIONAL_OFFSET: String,
-    pub HE_CHARACTERISTICS_OFFSET: String,
+#[derive(Debug, Clone, Default)]
+pub struct CoffHeader {
+    pub HE_MACHINEINFO: u16,
+    pub HE_SECTIONS: u16,
+    pub HE_DATESTAMP_UTC: u32,
+    pub HE_DATESTAMP_LOC: u32,
+    pub HE_POINTERTOSYMBOLS: u32,
+    pub HE_NUMBEROFSYMBOLS: u32,
+    pub HE_OPTIONAL: u16,
+    pub HE_CHARACTERISTICS: u16,
+    pub HE_MACHINEINFO_OFFSET: usize,
+    pub HE_SECTIONS_OFFSET: usize,
+    pub HE_DATESTAMP_OFFSET: usize,
+    pub HE_POINTERTOSYMBOLS_OFFSET: usize,
+    pub HE_NUMBEROFSYMBOLS_OFFSET: usize,
+    pub HE_OPTIONAL_OFFSET: usize,
+    pub HE_CHARACTERISTICS_OFFSET: usize,
 }
 
-impl Header {
-    #[allow(clippy::too_many_arguments)]
-    pub fn _create(
-        machine: String,
-        sections: String,
-        datestamp: String,
-        datestamploc: String,
-        p2symbols: String,
-        numsymbols: String,
-        optional: String,
-        characteristics: String,
-
-        machine_offset: String,
-        sections_offset: String,
-        datestamp_offset: String,
-        p2symbols_offset: String,
-        numsymbols_offset: String,
-        optional_offset: String,
-        characteristics_offset: String,
-    ) -> Self {
-        Self {
-            HE_MACHINEINFO: machine,
-            HE_SECTIONS: sections,
-            HE_DATESTAMP_UTC: datestamp,
-            HE_DATESTAMP_LOC: datestamploc,
-            HE_POINTERTOSYMBOLS: p2symbols,
-            HE_NUMBEROFSYMBOLS: numsymbols,
-            HE_OPTIONAL: optional,
-            HE_CHARACTERISTICS: characteristics,
-            HE_MACHINEINFO_OFFSET: machine_offset,
-            HE_SECTIONS_OFFSET: sections_offset,
-            HE_DATESTAMP_OFFSET: datestamp_offset,
-            HE_POINTERTOSYMBOLS_OFFSET: p2symbols_offset,
-            HE_NUMBEROFSYMBOLS_OFFSET: numsymbols_offset,
-            HE_OPTIONAL_OFFSET: optional_offset,
-            HE_CHARACTERISTICS_OFFSET: characteristics_offset,
-        }
-    }
-
-    #[allow(dead_code)]
+#[allow(dead_code)]
+impl CoffHeader {
     pub fn new() -> Self {
-        Self {
-            HE_MACHINEINFO: "".to_string(),
-            HE_SECTIONS: "".to_string(),
-            HE_DATESTAMP_UTC: "".to_string(),
-            HE_DATESTAMP_LOC: "".to_string(),
-            HE_POINTERTOSYMBOLS: "".to_string(),
-            HE_NUMBEROFSYMBOLS: "".to_string(),
-            HE_OPTIONAL: "".to_string(),
-            HE_CHARACTERISTICS: "".to_string(),
-            HE_MACHINEINFO_OFFSET: "".to_string(),
-            HE_SECTIONS_OFFSET: "".to_string(),
-            HE_DATESTAMP_OFFSET: "".to_string(),
-            HE_POINTERTOSYMBOLS_OFFSET: "".to_string(),
-            HE_NUMBEROFSYMBOLS_OFFSET: "".to_string(),
-            HE_OPTIONAL_OFFSET: "".to_string(),
-            HE_CHARACTERISTICS_OFFSET: "".to_string(),
-        }
+       Default::default()
     }
 }
 
-impl Display for Header {
+impl Display for CoffHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

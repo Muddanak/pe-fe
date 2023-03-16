@@ -1,5 +1,7 @@
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use sha2::Digest;
+use crate::coff_header::enums::PEFILEERROR;
+use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
 
 use crate::dos_header::structs::DosHeader;
 
@@ -76,4 +78,41 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
     }
 
     println!("SHA-256 of Rich Header:\n\t{:#04x}\n", hash.finalize());
+}
+
+///
+///
+/// check_for_mz
+/// Takes: a reference to a slice of u8
+/// Ex: &[u8]
+///
+/// Returns a Result of either Ok(()) or Errors out with a FileError
+/// FileError is of variant: NoMZinFile
+///
+/// Concept:  Grabs the first two characters of the
+///
+///
+pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
+
+    if "MZ".chars().all(|item| chunk.contains(&(item as u8))) {
+        let (offset, _) = chunk
+            .iter()
+            .enumerate()
+            .find(|(_, item)| "MZ".as_bytes().contains(item))
+            .unwrap();
+
+        Ok(offset)
+    } else {
+        Err(NoMZinFile)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_check_mz() {
+        assert_eq!(check_for_mz(&[b'M', b'Z']), Ok(0));
+    }
 }

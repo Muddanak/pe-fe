@@ -1,63 +1,23 @@
 pub mod enums;
 pub mod structs;
 
-use byteorder::{ByteOrder, LittleEndian};
-use chrono::{Local, TimeZone, Utc};
-use std::fs::File;
-use std::io::Read;
 
-use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
-use crate::coff_header::enums::{CHARACTERISTICS, MACHINE, PEFILEERROR};
-use crate::coff_header::structs::Header;
 
-pub fn _get_first_kilobyte(mut filename: File) -> Vec<u8> {
-    let mut chunk = [0; 0x400];
 
-    let _filename_check = match filename.read_exact(&mut chunk) {
-        Ok(_success) => Ok(()),
-        Err(_e) => Err(PEFILEERROR::CouldNotGetData),
-    };
 
-    Vec::from(chunk)
-}
 
-///
-///
-/// check_for_mz
-/// Takes: a reference to a slice of u8
-/// Ex: &[u8]
-///
-/// Returns a Result of either Ok(()) or Errors out with a FileError
-/// FileError is of variant: NoMZinFile
-///
-/// Concept:  Grabs the first two characters of the
-///
-///
-pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
 
-    if "MZ".chars().all(|item| chunk.contains(&(item as u8))) {
-        let (offset, _) = chunk
-            .iter()
-            .enumerate()
-            .find(|(_, item)| "MZ".as_bytes().contains(item))
-            .unwrap();
 
-        Ok(offset)
-    } else {
-        Err(NoMZinFile)
-    }
-}
 
-///
-/// make_header_from_info
-///
-pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> Header {
+
+/*
+pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> CoffHeader {
     let sizes = [2, 2, 4, 4, 4, 2, 2];
     let mut cur = offset + 4;
     let mut hold: Vec<String> = Vec::new();
     let mut offsets: Vec<usize> = vec![];
     let mut characteristics_vec: Vec<String> = Vec::new();
-    let mut new_header = Header::new();
+    let mut new_header = CoffHeader::new();
 
     for size in sizes {
         if size == 2 {
@@ -131,19 +91,5 @@ pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> Header {
 
     new_header
 }
+*/
 
-///
-///
-/// Tests are below
-///
-///
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn check_mz() {
-        assert_eq!(check_for_mz(&[b'M', b'Z']), Ok(()));
-    }
-}
