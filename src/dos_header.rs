@@ -1,6 +1,9 @@
 
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
+use sha2::{Digest};
+
 use crate::dos_header::structs::DosHeader;
+
 
 mod structs;
 
@@ -16,15 +19,9 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
     if header.ox3c_offset != cur {
         header.has_rich = true;
 
-        //let data_to_end = header.ox3c_offset - cur; //large - small_cur
-
-        //println!("{cur:#04X} {:#04X} {}", header.ox3c_offset, data_to_end/4);
-
         header.rich_xor_key = get_rich_xor_key(&data[0x80..header.ox3c_offset]);
 
         header.rich_ids = get_rich_data(&data[cur..header.ox3c_offset],  header.rich_xor_key);
-
-        //print_rich_ids(&header);
     }
 
 
@@ -50,52 +47,41 @@ fn get_rich_xor_key(data: &[u8]) -> u32 {
         .enumerate()
         .find(|(_, item)| "Rich".as_bytes().contains(item) )
         .unwrap();
-    BigEndian::read_u32(&data[offset+4..offset+8])
+    let tmp = BigEndian::read_u32(&data[offset+4..offset+8]);
+    tmp
 }
 
 fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
 
-    //dbg!(data.len());
     let key : [u8;4] = key.to_be_bytes();
     let mut cur = 0;
     let mut rich_ids:Vec<u32> = vec![];
 
     let mut hold: [u8;4] = [0;4];
 
-    for _ in 0..data.len()/4 {
+    for _ in 0..(data.len()/4) {
         for i in 0..4 {
             hold[i] = data[cur] ^ key[i];
             cur += 1;
-            //dbg!(cur);
         }
         rich_ids.push(u32::from_be_bytes(hold));
     }
-
-    /*for x in &rich_ids {
-        println!("{:#04x}", x);
-        println!("{:?}", String::from_utf8(Vec::from(x.to_be_bytes())));
-    }*/
     rich_ids
 }
 
-pub fn print_rich_ids(header: &DosHeader) {
-
-    //todo when I get back here later on
-    //Some point
+pub fn print_rich_sha256_hash(header: &DosHeader) {
 
     println!("Rich ID Information");
     let signature = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes())).unwrap();
     println!("Signature Verification (Should be 'DanS'): {}", signature);
 
-    //let test = u16::try_from(header.rich_ids[4]).expect("Whoopsie");
-    let mut test2 = header.rich_ids[4];
-    test2 &= 0x0000FFFF;
-    test2 <<= 2;
+    let mut hash = sha2::Sha256::new();
 
-    dbg!(test2);
-    for item in (4..header.rich_ids.len()/2).step_by(2) {
-        println!("{} {}", header.rich_ids[item], header.rich_ids[item+1]);
+
+    for idnum in (0..header.rich_ids.len()).step_by(2) {
+        hash.update(header.rich_ids[idnum].to_be_bytes());
+        hash.update(header.rich_ids[idnum+1].to_be_bytes());
     }
 
-
+    println!("SHA-256 of Rich Header:\n\t{:#04x}", hash.finalize());
 }

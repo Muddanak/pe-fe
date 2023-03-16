@@ -32,61 +32,6 @@ pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
     Vec::from(chunk)
 }
 
-/*pub fn _get_pe_offset(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
-    let mut val: usize = *chunk.get(0x3c).unwrap() as usize;
-    println!("val first is {val}");
-
-    if val == 0 {
-        for slot in 0..chunk.len() {
-            if chunk[slot] == 0x50
-                && chunk[slot + 1] == 0x45
-                && chunk[slot + 2] == 0x00
-                && chunk[slot + 3] == 0x00
-            {
-                val = slot;
-                break;
-            }
-        }
-    }
-    //dbg!(&chunk[val..val+4]);
-    Ok(val)
-}*/
-
-/*pub fn _verify_pe_header(slice: &[u8]) -> String {
-    let pe = match String::from_utf8(Vec::from(slice)) {
-        Ok(pe) => pe,
-        Err(e) => format!("{}", e),
-    };
-    pe
-}
-*/
-
-pub fn _get_pe_header(chunk: &[u8]) -> usize {
-    let mut val: usize = *chunk.get(0x3c).unwrap() as usize;
-    if val == 0 {
-        for slot in 0..chunk.len() {
-            if chunk[slot] == 0x50
-                && chunk[slot + 1] == 0x45
-                && chunk[slot + 2] == 0x00
-                && chunk[slot + 3] == 0x00
-            {
-                val = slot;
-                break;
-            }
-        }
-    }
-
-    val
-}
-
-pub fn _usize_to_hex(value: usize) -> usize {
-    let val = match usize::from_str_radix(&value.to_string(), 16) {
-        Ok(x) => x,
-        Err(_e) => 0,
-    };
-    val.to_owned()
-}
-
 ///
 ///
 /// check_for_mz
