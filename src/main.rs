@@ -1,14 +1,10 @@
-mod coff_header;
-mod dos_header;
-mod utils;
-
-use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
-use crate::dos_header::{make_dos_header, print_rich_sha256_hash, check_for_mz};
-use crate::utils::{get_large_data_chunk};
+use pe_fe::coff_header::enums::PEFILEERROR::NoMZinFile;
+use pe_fe::dos_header::{make_dos_header, print_rich_sha256_hash, check_for_mz};
+use pe_fe::utils::{get_large_data_chunk};
 use clap::Parser;
 use std::fs::File;
 use std::process;
-use crate::coff_header::make_coff_header;
+use pe_fe::coff_header::make_coff_header;
 
 #[derive(Parser, Debug)]
 #[command(author, version)]
