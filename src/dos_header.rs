@@ -12,14 +12,16 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
     let mut cur: usize = 0x3c; //cur = 60
 
     header.mz_offset = mz_found; //should be 0x00
-    header.ox3c_offset = LittleEndian::read_u32(&data[cur..cur + 4]) as usize;
+    header.pe_offset = LittleEndian::read_u32(&data[cur..cur + 4]) as usize;
     cur += 0x04; //cur = 64
     header.has_stub = check_for_stub(&data[cur..]); //Read from data[64] to end
     cur += 0x40; //cur = 128
-    if header.ox3c_offset != cur {
+
+    if header.pe_offset != cur {
+
         header.has_rich = true;
-        header.rich_xor_key = get_rich_xor_key(&data[0x80..header.ox3c_offset]);
-        header.rich_ids = get_rich_data(&data[cur..header.ox3c_offset], header.rich_xor_key);
+        header.rich_xor_key = get_rich_xor_key(&data[0x80..header.pe_offset]);
+        header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
 
     header
@@ -35,6 +37,7 @@ fn check_for_stub(data: &[u8]) -> bool {
     if offset != 0 {
         return true;
     }
+
     false
 }
 
@@ -44,7 +47,9 @@ fn get_rich_xor_key(data: &[u8]) -> u32 {
         .enumerate()
         .find(|(_, item)| "Rich".as_bytes().contains(item))
         .unwrap();
+
     let tmp = BigEndian::read_u32(&data[offset + 4..offset + 8]);
+
     tmp
 }
 
@@ -62,6 +67,7 @@ fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
         }
         rich_ids.push(u32::from_be_bytes(hold));
     }
+    
     rich_ids
 }
 

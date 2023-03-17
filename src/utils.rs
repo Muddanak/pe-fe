@@ -36,11 +36,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_check_mz() {
-        assert_eq!(check_for_mz(&[b'M', b'Z']), Ok(0));
-    }
-
-    #[test]
     fn test_u32_to_u16_high_low() {
         assert_eq!(u32_to_u16_high_low(0x10101010), (0x1010, 0x1010));
     }

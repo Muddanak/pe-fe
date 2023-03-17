@@ -49,7 +49,7 @@ impl Display for PEFILEERROR {
 }
 
 #[allow(dead_code)]
-pub static MACHINE: phf::Map<&'static str, i32> = phf_map!(
+pub static MACHINE: phf::Map<&'static str, u16> = phf_map!(
     "MACHINE_UNKNOWN" =>        0x0,
     "MACHINE_ALPHA" => 	        0x184,
     "MACHINE_ALPHA64" =>        0x284,
@@ -83,7 +83,7 @@ pub static MACHINE: phf::Map<&'static str, i32> = phf_map!(
 );
 
 #[allow(dead_code)]
-pub static CHARACTERISTICS: phf::Map<&'static str, i32> = phf_map!(
+pub static CHARACTERISTICS: phf::Map<&'static str, u16> = phf_map!(
     "RELOCS_STRIPPED"   =>          0x0001,
     "EXECUTABLE_IMAGE"   =>         0x0002,
     "LINE_NUMS_STRIPPED"   =>       0x0004,

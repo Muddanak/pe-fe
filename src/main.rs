@@ -8,6 +8,7 @@ use crate::utils::{get_large_data_chunk};
 use clap::Parser;
 use std::fs::File;
 use std::process;
+use crate::coff_header::make_coff_header;
 
 #[derive(Parser, Debug)]
 #[command(author, version)]
@@ -38,4 +39,12 @@ fn main() {
     if header_dos.has_rich {
         print_rich_sha256_hash(&header_dos);
     }
+
+    //dbg!(header_dos.pe_offset+24);
+
+    let header_coff = make_coff_header(&chunk[header_dos.pe_offset..header_dos.pe_offset+24]);
+
+    println!("{}", header_coff);
+
+
 }
