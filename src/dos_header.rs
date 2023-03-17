@@ -1,5 +1,6 @@
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use sha2::Digest;
+
 use crate::coff_header::enums::PEFILEERROR;
 use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
 
@@ -75,13 +76,19 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
     println!("\n---------------------------\nRich ID Information");
     let signature = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes())).unwrap();
     println!("Signature Verification (Should be 'DanS'): {}", signature);
+    let mut hashvec: Vec<u32> = Vec::new();
 
     let mut hash = sha2::Sha256::new();
 
     for idnum in (0..header.rich_ids.len()).step_by(2) {
-        hash.update(header.rich_ids[idnum].to_be_bytes());
-        hash.update(header.rich_ids[idnum + 1].to_be_bytes());
+        hashvec.push(header.rich_ids[idnum]);
+        hashvec.push(header.rich_ids[idnum + 1]);
     }
+
+    //println!("{}", hashvec.iter().map(|x| x.to_string()).collect::<String>());
+    hash.update(
+        hashvec.iter().map(|x| x.to_string()).collect::<String>()
+    );
 
     println!("SHA-256 of Rich Header:\n\t{:#04x}\n", hash.finalize());
 }

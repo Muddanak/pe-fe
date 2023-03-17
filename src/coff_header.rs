@@ -1,5 +1,5 @@
 
-use byteorder::{LittleEndian, ByteOrder, BigEndian};
+use byteorder::{LittleEndian, ByteOrder};
 use chrono::{TimeZone, Utc};
 use crate::coff_header::enums::{CHARACTERISTICS, MACHINE};
 use crate::coff_header::structs::CoffHeader;
