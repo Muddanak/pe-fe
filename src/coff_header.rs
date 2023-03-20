@@ -28,12 +28,6 @@ pub fn make_coff_header(data: &[u8]) -> CoffHeader {
     cur += 2;
     coffheader.HE_CHARACTERISTICS = LittleEndian::read_u16(&data[cur..cur+2]);
 
-    /*let machine_info = MACHINE.into_iter()
-        .find(|(_, y)| **y == coffheader.HE_MACHINEINFO).unwrap();*/
-
-
-    //coffheader.HE_DETAILS.MACHINE = String::from(*machine_info.0);
-
     coffheader.HE_DETAILS.MACHINE = match_u16_in_map(&MACHINE, coffheader.HE_MACHINEINFO);
 
     for (charac, charac_id) in CHARACTERISTICS.into_iter() {

@@ -7,8 +7,8 @@ use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
 use crate::dos_header::structs::DosHeader;
 use crate::utils::index_of_string_in_u8;
 
-mod structs;
-mod enums;
+pub mod structs;
+pub mod enums;
 
 pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
     let mut header = DosHeader::new();
@@ -26,7 +26,6 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
         header.rich_xor_key = get_rich_xor_key(&data[0x80..header.pe_offset]);
         header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
-
 
 
     header

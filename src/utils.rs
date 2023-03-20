@@ -47,10 +47,21 @@ pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
 
 #[cfg(test)]
 mod tests {
+    use phf::phf_map;
     use super::*;
+
+    static MAP_TEST_1: phf::Map<&str, u16> = phf_map!(
+        "Test" => 0x0101,
+        "Test Other" => 0x0202,
+    );
 
     #[test]
     fn test_u32_to_u16_high_low() {
         assert_eq!(u32_to_u16_high_low(0x10101010), (0x1010, 0x1010));
+    }
+
+    #[test]
+    fn test_match_u16_in_map(){
+        assert_eq!(match_u16_in_map(&MAP_TEST_1, 0x0101), "Test");
     }
 }
