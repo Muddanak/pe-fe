@@ -22,7 +22,21 @@ pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
     Vec::from(chunk)
 }
 
+pub fn index_of_string_in_u8(data: &[u8], text_to_find: &str) -> usize {
+    let (offset, _) = data
+        .iter()
+        .enumerate()
+        .find(|(_, item)| text_to_find.as_bytes().contains(item))
+        .unwrap();
 
+    offset
+}
+
+pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
+
+    String::from(*map_name.into_iter()
+        .find(|(_, y)| **y == item).unwrap().0)
+}
 
 
 ///

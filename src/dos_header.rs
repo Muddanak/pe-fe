@@ -5,8 +5,10 @@ use crate::coff_header::enums::PEFILEERROR;
 use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
 
 use crate::dos_header::structs::DosHeader;
+use crate::utils::index_of_string_in_u8;
 
 mod structs;
+mod enums;
 
 pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
     let mut header = DosHeader::new();
@@ -25,15 +27,14 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
         header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
 
+
+
     header
 }
 
 fn check_for_stub(data: &[u8]) -> bool {
-    let (offset, _) = data
-        .iter()
-        .enumerate()
-        .find(|(_, item)| "This program".as_bytes().contains(item))
-        .unwrap();
+
+    let offset = index_of_string_in_u8(data, "This program");
 
     if offset != 0 {
         return true;
@@ -43,15 +44,10 @@ fn check_for_stub(data: &[u8]) -> bool {
 }
 
 fn get_rich_xor_key(data: &[u8]) -> u32 {
-    let (offset, _) = data
-        .iter()
-        .enumerate()
-        .find(|(_, item)| "Rich".as_bytes().contains(item))
-        .unwrap();
 
-    let tmp = BigEndian::read_u32(&data[offset + 4..offset + 8]);
+    let offset = index_of_string_in_u8(data, "Rich");
 
-    tmp
+    BigEndian::read_u32(&data[offset + 4..offset + 8])
 }
 
 fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
@@ -80,12 +76,11 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
 
     let mut hash = sha2::Sha256::new();
 
-    for idnum in (0..header.rich_ids.len()).step_by(2) {
-        hashvec.push(header.rich_ids[idnum]);
-        hashvec.push(header.rich_ids[idnum + 1]);
+    for id_num in (0..header.rich_ids.len()).step_by(2) {
+        hashvec.push(header.rich_ids[id_num]);
+        hashvec.push(header.rich_ids[id_num + 1]);
     }
 
-    //println!("{}", hashvec.iter().map(|x| x.to_string()).collect::<String>());
     hash.update(
         hashvec.iter().map(|x| x.to_string()).collect::<String>()
     );
