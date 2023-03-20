@@ -45,6 +45,11 @@ pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
         .find(|(_, y)| **y == item).unwrap().0)
 }
 
+pub fn match_gen_in_map<T: PartialEq>(map_name: &phf::Map<&str, T>, item: T) -> String {
+    String::from(*map_name.into_iter()
+        .find(|(_, y)| **y == item).unwrap().0)
+}
+
 
 ///
 ///

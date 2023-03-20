@@ -6,6 +6,7 @@ use std::fs::File;
 use std::process;
 use pe_fe::coff_header::make_coff_header;
 use pe_fe::optional_header::make_optional_header;
+use pe_fe::show_headers;
 
 #[derive(Parser, Debug)]
 #[command(author, version)]
@@ -32,7 +33,7 @@ fn main() {
     });
 
     let header_dos = make_dos_header(dos_header_data, mz_offset);
-    println!("{}\n", header_dos);
+    //println!("{}\n", header_dos);
 
     if header_dos.has_rich {
         print_rich_sha256_hash(&header_dos);
@@ -44,14 +45,16 @@ fn main() {
 
     let header_coff = make_coff_header(&chunk[cursor..cursor+24]);
 
-    println!("{}\n", header_coff);
+    //println!("{}\n", header_coff);
 
     cursor += 24;
 
-    let opt_header = make_optional_header(&chunk[cursor..cursor+20]);
+    let header_opt = make_optional_header(&chunk[cursor..cursor+92]);
 
 
-    println!("{}", opt_header);
+    //println!("{}", opt_header);
+
+    show_headers(header_dos, header_coff, header_opt);
 
 
 }

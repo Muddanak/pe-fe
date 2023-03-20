@@ -38,14 +38,14 @@ impl CoffHeaderDetails {
 
 impl Display for CoffHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Machine: \t\t{:#04x}\nSections: \t\t{:#04x}\nDateStamp: \t\t{:#04x}\nSymbolsAt: \t\t{:#04x}\n# of Symbols: \t\t{:#04x}\nOptional: \t\t{:#04x}\nCharacteristics: \t{:#04x}\n\nDetails: \n{}",
+        write!(f, "Machine: \t\t{:#04x}\nSections: \t\t{:#04x}\nDateStamp: \t\t{:#04x}\nSymbolsAt: \t\t{:#04x}\n# of Symbols: \t\t{:#04x}\nOptional: \t\t{:#04x}\nCharacteristics: \t{:#04x}\n\n{}",
         self.HE_MACHINEINFO, self.HE_SECTIONS, self.HE_DATESTAMP_UTC, self.HE_POINTERTOSYMBOLS, self.HE_NUMBEROFSYMBOLS, self.HE_OPTIONAL, self.HE_CHARACTERISTICS, self.HE_DETAILS)
     }
 }
 
 impl Display for CoffHeaderDetails {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Machine: \t\t{}\nDatestamp UTC: \t\t{}\nCharacteristics: \t{}",
+        write!(f, "Machine: \t\t{}\nDatestamp UTC: \t\t{}\nCharacteristics: \t{}\n",
         self.MACHINE, self.DATESTAMP_UTC, self.CHARACTERISTICS)
     }
 }
