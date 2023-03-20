@@ -22,8 +22,11 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
 
     if header.pe_offset != cur {
 
-        header.has_rich = true;
+
         header.rich_xor_key = get_rich_xor_key(&data[0x80..header.pe_offset]);
+        if header.rich_xor_key != 0 {
+            header.has_rich = true;
+        }
         header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
 
@@ -46,7 +49,11 @@ fn get_rich_xor_key(data: &[u8]) -> u32 {
 
     let offset = index_of_string_in_u8(data, "Rich");
 
-    BigEndian::read_u32(&data[offset + 4..offset + 8])
+    if offset != 0 {
+        BigEndian::read_u32(&data[offset + 4..offset + 8])
+    } else {
+        0
+    }
 }
 
 fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {

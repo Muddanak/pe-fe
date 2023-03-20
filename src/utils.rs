@@ -1,15 +1,15 @@
 use crate::coff_header::enums::PEFILEERROR;
 use std::fs::File;
 use std::io::Read;
-use std::ops::{BitAnd, Shr};
 
 
-#[allow(dead_code)]
+
+/*#[allow(dead_code)]
 pub fn u32_to_u16_high_low(inp: u32) -> (u16, u16) {
     let high: u16 = inp.bitand(0xFFFF0000).shr(16) as u16;
     let low: u16 = inp.bitand(0x0000FFFF) as u16;
     (high, low)
-}
+}*/
 
 pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
     let mut chunk = [0; 0x900];
@@ -23,13 +23,20 @@ pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
 }
 
 pub fn index_of_string_in_u8(data: &[u8], text_to_find: &str) -> usize {
-    let (offset, _) = data
+    /*let (offset, _) = data
         .iter()
         .enumerate()
         .find(|(_, item)| text_to_find.as_bytes().contains(item))
-        .unwrap();
+        .unwrap();*/
 
-    offset
+    if let Some( (offset, _) ) = data.iter()
+        .enumerate()
+        .find( |(_, item) | text_to_find.as_bytes().contains(item)) {
+
+        offset
+    } else {
+        0
+    }
 }
 
 pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
