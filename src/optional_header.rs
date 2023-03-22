@@ -1,6 +1,6 @@
 use byteorder::{ByteOrder, LittleEndian};
 use crate::optional_header::enums::{DLL_CHARACTERISTICS, MAGIC, SUBSYSTEM};
-use crate::optional_header::structs::{OptHeader, OptHeaderWindowsDetails};
+use crate::optional_header::structs::{OptHeader, OptHeaderPE32Details, OptHeaderPE32PlusDetails};
 use crate::utils::{match_gen_in_map};
 
 pub(crate) mod structs;
@@ -9,7 +9,6 @@ pub(crate) mod enums;
 pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
     let mut optheader = OptHeader::new();
     let mut cur: usize = cursor;
-    dbg!(cur);
 
     optheader.MAGIC = LittleEndian::read_u16(&data[cur..cur+2]);
     optheader.DETAILS.MAGIC = match_gen_in_map(&MAGIC, optheader.MAGIC );
@@ -28,7 +27,7 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
 
     if optheader.MAGIC.eq(&0x20b) {
         let sizes: Vec<usize> = vec![8, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2, 8, 8, 8, 8, 4, 4];
-        let mut wind = OptHeaderWindowsDetails::default();
+        let mut wind = OptHeaderPE32PlusDetails::default();
         let mut veciter = sizes.iter();
         let mut tmpvec: Vec<String> = Vec::new();
 
@@ -55,7 +54,6 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         wind.CHECKSUM = LittleEndian::read_u32(&data[cur..cur+4]);
         cur += veciter.next().unwrap();
 
-        //wind.SUBSYSTEM = LittleEndian::read_u16(&data[cur..cur+2]);
         let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
         for (charac, charac_id) in SUBSYSTEM.into_iter() {
             if (comparator & *charac_id).ne(&0)  | charac_id.eq(&0) {
@@ -66,7 +64,6 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         tmpvec.clear();
         cur += veciter.next().unwrap();
 
-        //wind.DLLCHARACTERISTICS = LittleEndian::read_u16(&data[cur..cur+2]);
         let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
         for (charac, charac_id) in DLL_CHARACTERISTICS.into_iter() {
             if comparator & *charac_id != 0 {
@@ -88,12 +85,71 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         wind.NUMBERRVASIDES = LittleEndian::read_u32(&data[cur..cur+4]);
         cur += veciter.next().unwrap();
 
-        optheader.WINDETAILS = wind;
+        optheader.WINDETAILSPLUS = wind;
 
+    } else if optheader.MAGIC.eq(&0x10b) {
+        let sizes: Vec<usize> = vec![4,4, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2, 4, 4, 4, 4, 4, 4];
+        let mut wind = OptHeaderPE32Details::default();
+        let mut veciter = sizes.iter();
+        let mut tmpvec: Vec<String> = Vec::new();
 
+        optheader.BASEOFDATA = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.IMAGEBASE = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.SECTIONALIGNMENT = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.FILEALIGNMENT = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.MAJOROSVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
+        wind.MINOROSVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
+        wind.MAJORSUBVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
+        wind.MINORSUBVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
+        wind.WIN32VERSION = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.SIZEOFIMAGE = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.SIZEOFHEADERS = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.CHECKSUM = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+
+        let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
+        for (charac, charac_id) in SUBSYSTEM.into_iter() {
+            if (comparator & *charac_id).ne(&0)  | charac_id.eq(&0) {
+                tmpvec.push(String::from(*charac));
+            }
+        }
+        wind.SUBSYSTEM = tmpvec.join("|");
+        tmpvec.clear();
+        cur += veciter.next().unwrap();
+
+        let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
+        for (charac, charac_id) in DLL_CHARACTERISTICS.into_iter() {
+            if comparator & *charac_id != 0 {
+                tmpvec.push(String::from(*charac));
+            }
+        }
+        wind.DLLCHARACTERISTICS = tmpvec.join("|");
+        cur += veciter.next().unwrap();
+        wind.SIZEOFSTACKRESERVE = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.SIZEOFSTACKCOMMIT = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.SIZEOFHEAPRESERVE = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.SIZEOFHEAPCOMMIT = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.LOADERFLAGS = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+        wind.NUMBERRVASIDES = LittleEndian::read_u32(&data[cur..cur+4]);
+        cur += veciter.next().unwrap();
+
+        optheader.WINDETAILS32 = wind;
     }
-
-
-
     optheader
 }

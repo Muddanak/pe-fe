@@ -9,5 +9,11 @@ pub mod utils;
 
 #[allow(dead_code)]
 pub fn show_headers(dosheader: DosHeader, coffheader: CoffHeader, optheader: OptHeader) {
-    println!("{dosheader}{coffheader}{optheader}")
+    println!("{dosheader}{coffheader}{optheader}");
+    if optheader.MAGIC.eq(&0x20b) {
+        println!("{}", optheader.WINDETAILSPLUS)
+    }
+    else if optheader.MAGIC.eq(&0x10b) {
+        println!("{}", optheader.WINDETAILS32)
+    }
 }

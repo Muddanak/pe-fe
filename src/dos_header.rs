@@ -26,7 +26,6 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
     println!("Made it past stub, got {} and PE is {} and cursor is {}", header.has_stub, header.pe_offset, cur);
 
     header.rich_xor_key = get_rich_xor_key(&data[cur..header.pe_offset]);
-    dbg!(header.rich_xor_key);
     if header.rich_xor_key != 0 {
         header.has_rich = true;
         header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);

@@ -3,14 +3,6 @@ use std::fs::File;
 use std::io::Read;
 
 
-
-/*#[allow(dead_code)]
-pub fn u32_to_u16_high_low(inp: u32) -> (u16, u16) {
-    let high: u16 = inp.bitand(0xFFFF0000).shr(16) as u16;
-    let low: u16 = inp.bitand(0x0000FFFF) as u16;
-    (high, low)
-}*/
-
 pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
     let mut chunk = [0; 0x900];
 
@@ -30,18 +22,6 @@ pub fn index_of_string_in_u8(data: &[u8], text_to_find: &str) -> usize {
         }
     }
     0
-
-    /*let offset = match data.iter()
-        .enumerate()
-        .find(|(_, item)| text_to_find.chars().a == item) {
-        Some( (offset, _) ) => offset,
-        _ => 0,
-    };
-
-    let offset = data.iter()
-        .enumerate()
-        .all
-    0*/
 }
 
 pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
@@ -51,8 +31,7 @@ pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
 }
 
 pub fn match_gen_in_map<T: PartialEq>(map_name: &phf::Map<&str, T>, item: T) -> String {
-    /*String::from(*map_name.into_iter()
-        .find(|(_, y)| **y == item).unwrap().0)*/
+
     match map_name.into_iter().find(|(_, y)| **y == item) {
         Some( (word, _y) ) => String::from(*word),
         None => String::from("None"),
