@@ -10,47 +10,50 @@ use crate::utils::index_of_string_in_u8;
 pub mod structs;
 pub mod enums;
 
-pub fn make_dos_header(data: &[u8], mz_found: usize) -> DosHeader {
+pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
+
     let mut header = DosHeader::new();
     let mut cur: usize = 0x3c; //cur = 60
 
     header.mz_offset = mz_found; //should be 0x00
-    header.pe_offset = LittleEndian::read_u32(&data[cur..cur + 4]) as usize;
-    cur += 0x04; //cur = 64
-    header.has_stub = check_for_stub(&data[cur..]); //Read from data[64] to end
-    //cur += 0x40; //cur = 128
+    header.pe_offset = LittleEndian::read_u32(&data[cur..cur+4]) as usize;
+    println!("Cursor: {:#04x}", cur);
+    cur += 0x04; //cur = 64/0x40
+    header.has_stub = check_for_stub(&data[cur..header.pe_offset]); //Read from data[64] to end
+    if header.has_stub {
+        cur += 0x40;
+    }
+    println!("Made it past stub, got {} and PE is {} and cursor is {}", header.has_stub, header.pe_offset, cur);
 
-    if header.pe_offset != cur {
-
-
-        header.rich_xor_key = get_rich_xor_key(&data[cur..header.pe_offset]);
-        dbg!(header.rich_xor_key);
-        if header.rich_xor_key != 0 {
-            header.has_rich = true;
-            header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
-        }
-
+    header.rich_xor_key = get_rich_xor_key(&data[cur..header.pe_offset]);
+    dbg!(header.rich_xor_key);
+    if header.rich_xor_key != 0 {
+        header.has_rich = true;
+        header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
 
 
-    header
+
+
+    (header, cur)
 }
 
 fn check_for_stub(data: &[u8]) -> bool {
 
-    let offset = index_of_string_in_u8(data, "This program");
+    //let offset = index_of_string_in_u8(data, "This program");
 
-    if offset != 0 {
-        return true;
-    }
-
-    false
+    "This program".bytes().all(|x|data.contains(&x))
 }
 
 fn get_rich_xor_key(data: &[u8]) -> u32 {
 
-    let offset = index_of_string_in_u8(data, "Rich");
-    //dbg!(offset);
+    let offset = index_of_string_in_u8(data, &"Rich".to_string());
+    /*let mut offset = 0;
+    if "Rich".chars().all(|x| data.contains(&(x as u8)))
+    {
+        data.iter().find(|x| "Rich".as_bytes().contains())
+    }*/
+    println!("Rich: {:#04x}", offset);
 
     if offset != 0 {
         BigEndian::read_u32(&data[offset + 4..offset + 8])
@@ -79,7 +82,12 @@ fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
 
 pub fn print_rich_sha256_hash(header: &DosHeader) {
     println!("\n---------------------------\nRich ID Information");
-    let signature = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes())).unwrap();
+    let val = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes()));
+    let mut signature = String::new();
+    if val.is_ok() {
+        signature = val.unwrap();
+    }
+
     println!("Signature Verification (Should be 'DanS'): {}", signature);
     let mut hashvec: Vec<u32> = Vec::new();
 
@@ -111,15 +119,10 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
 ///
 pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
 
-    if "MZ".chars().all(|item| chunk.contains(&(item as u8))) {
-        let (offset, _) = chunk
-            .iter()
-            .enumerate()
-            .find(|(_, item)| "MZ".as_bytes().contains(item))
-            .unwrap();
-
-        Ok(offset)
-    } else {
+    let data = &chunk[..2];
+    if "MZ".chars().all(|item| data.contains(&(item as u8))) {
+        Ok(0x00)
+    }else {
         Err(NoMZinFile)
     }
 }

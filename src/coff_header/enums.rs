@@ -1,5 +1,7 @@
+use std::error::Error;
 use phf::phf_map;
 use std::fmt::{Display, Formatter};
+
 
 ///
 ///
@@ -22,7 +24,7 @@ pub enum PEFILEERROR {
     PEInvalid,
 }
 
-impl std::error::Error for PEFILEERROR {}
+impl Error for PEFILEERROR {}
 
 impl Display for PEFILEERROR {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

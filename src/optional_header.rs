@@ -6,9 +6,10 @@ use crate::utils::{match_gen_in_map};
 pub(crate) mod structs;
 pub(crate) mod enums;
 
-pub fn make_optional_header(data: &[u8]) -> OptHeader {
+pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
     let mut optheader = OptHeader::new();
-    let mut cur: usize = 0;
+    let mut cur: usize = cursor;
+    dbg!(cur);
 
     optheader.MAGIC = LittleEndian::read_u16(&data[cur..cur+2]);
     optheader.DETAILS.MAGIC = match_gen_in_map(&MAGIC, optheader.MAGIC );

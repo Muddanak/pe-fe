@@ -8,11 +8,11 @@ use crate::utils::{match_gen_in_map};
 pub mod enums;
 pub mod structs;
 
-pub fn make_coff_header(data: &[u8]) -> CoffHeader {
+pub fn make_coff_header(data: &[u8], offset: usize) -> CoffHeader {
     let mut coffheader = CoffHeader::new();
     let mut characteristics_vec: Vec<String> = Vec::new();
 
-    let mut cur = 4;
+    let mut cur = offset;
 
     coffheader.HE_MACHINEINFO = LittleEndian::read_u16(&data[cur..cur+2]);
     cur += 2;

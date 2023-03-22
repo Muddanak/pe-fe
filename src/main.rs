@@ -1,9 +1,11 @@
-use pe_fe::coff_header::enums::PEFILEERROR::NoMZinFile;
+
 use pe_fe::dos_header::{make_dos_header, print_rich_sha256_hash, check_for_mz};
-use pe_fe::utils::{get_large_data_chunk};
-use clap::Parser;
+
+use clap::{arg, Parser};
 use std::fs::File;
-use std::process;
+use std::{io, process};
+use std::io::{BufReader, Read};
+
 use pe_fe::coff_header::make_coff_header;
 use pe_fe::optional_header::make_optional_header;
 use pe_fe::show_headers;
@@ -15,46 +17,41 @@ struct Args {
     filename: String,
 }
 
-fn main() {
+fn main() -> io::Result<()> {
     let args = Args::parse();
+    let mut reader= BufReader::new(File::open(args.filename)?);
+    let mut buffer = [0;1024];
+    reader.read_exact(&mut buffer)?;
 
-    let success = File::open(&args.filename).unwrap_or_else(|_| {
-        println!("Could not open file {}", &args.filename);
-        process::exit(1);
-    });
+    let mz_offset = match check_for_mz(&buffer) {
+        Ok(offset) => offset,
+        Err(e) => { println!("{e}"); process::exit(1) },
+    };
 
-    let chunk: Vec<u8> = get_large_data_chunk(success);
-    let dos_header_data = &chunk[0..1024];
-    let mut cursor :usize;
+    let header_dos = make_dos_header(&buffer, mz_offset);
+    //println!("{}\n", header_dos.0);
 
-    let mz_offset = check_for_mz(dos_header_data).unwrap_or_else(|_| {
-        println!("{}", NoMZinFile);
-        process::exit(1);
-    });
-
-    let header_dos = make_dos_header(dos_header_data, mz_offset);
-    //println!("{}\n", header_dos);
-
-    if header_dos.has_rich {
-        print_rich_sha256_hash(&header_dos);
+    if header_dos.0.has_rich {
+        print_rich_sha256_hash(&header_dos.0);
     }
 
-    //dbg!(header_dos.pe_offset+24);
 
-    cursor = header_dos.pe_offset;
+    let mut cursor = header_dos.0.pe_offset+4;
 
-    let header_coff = make_coff_header(&chunk[cursor..cursor+24]);
+    let header_coff = make_coff_header(&buffer, cursor);
 
     //println!("{}\n", header_coff);
 
-    cursor += 24;
+    cursor += 20;
 
-    let header_opt = make_optional_header(&chunk[cursor..cursor+92]);
+    let header_opt = make_optional_header(&buffer, cursor);
 
 
     //println!("{}", opt_header);
 
-    show_headers(header_dos, header_coff, header_opt);
+    show_headers(header_dos.0, header_coff, header_opt);
+
+    Ok(())
 
 
 }

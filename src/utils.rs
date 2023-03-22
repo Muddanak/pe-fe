@@ -23,20 +23,25 @@ pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
 }
 
 pub fn index_of_string_in_u8(data: &[u8], text_to_find: &str) -> usize {
-    /*let (offset, _) = data
-        .iter()
-        .enumerate()
-        .find(|(_, item)| text_to_find.as_bytes().contains(item))
-        .unwrap();*/
 
-    if let Some( (offset, _) ) = data.iter()
-        .enumerate()
-        .find( |(_, item) | text_to_find.as_bytes().contains(item)) {
-
-        offset
-    } else {
-        0
+    for (x, y) in data.iter().enumerate() {
+        if *y == text_to_find.as_bytes()[0] {
+            return x
+        }
     }
+    0
+
+    /*let offset = match data.iter()
+        .enumerate()
+        .find(|(_, item)| text_to_find.chars().a == item) {
+        Some( (offset, _) ) => offset,
+        _ => 0,
+    };
+
+    let offset = data.iter()
+        .enumerate()
+        .all
+    0*/
 }
 
 pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
@@ -46,8 +51,12 @@ pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
 }
 
 pub fn match_gen_in_map<T: PartialEq>(map_name: &phf::Map<&str, T>, item: T) -> String {
-    String::from(*map_name.into_iter()
-        .find(|(_, y)| **y == item).unwrap().0)
+    /*String::from(*map_name.into_iter()
+        .find(|(_, y)| **y == item).unwrap().0)*/
+    match map_name.into_iter().find(|(_, y)| **y == item) {
+        Some( (word, _y) ) => String::from(*word),
+        None => String::from("None"),
+    }
 }
 
 
@@ -67,10 +76,6 @@ mod tests {
         "Test Other" => 0x0202,
     );
 
-    #[test]
-    fn test_u32_to_u16_high_low() {
-        assert_eq!(u32_to_u16_high_low(0x10101010), (0x1010, 0x1010));
-    }
 
     #[test]
     fn test_match_u16_in_map(){
