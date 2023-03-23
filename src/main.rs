@@ -30,10 +30,6 @@ fn main() -> io::Result<()> {
 
     let header_dos = make_dos_header(&buffer, mz_offset);
 
-    if header_dos.0.has_rich {
-        print_rich_sha256_hash(&header_dos.0);
-    }
-
     let mut cursor = header_dos.0.pe_offset+4;
 
     let header_coff = make_coff_header(&buffer, cursor);
@@ -42,7 +38,11 @@ fn main() -> io::Result<()> {
 
     let header_opt = make_optional_header(&buffer, cursor);
 
-    show_headers(header_dos.0, header_coff, header_opt);
+    show_headers(&header_dos.0, &header_coff, &header_opt);
+
+    if header_dos.0.has_rich {
+        print_rich_sha256_hash(&header_dos.0);
+    }
 
     Ok(())
 }

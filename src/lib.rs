@@ -8,7 +8,7 @@ pub mod optional_header;
 pub mod utils;
 
 #[allow(dead_code)]
-pub fn show_headers(dosheader: DosHeader, coffheader: CoffHeader, optheader: OptHeader) {
+pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &OptHeader) {
     println!("{dosheader}{coffheader}{optheader}");
     if optheader.MAGIC.eq(&0x20b) {
         println!("{}", optheader.WINDETAILSPLUS)
