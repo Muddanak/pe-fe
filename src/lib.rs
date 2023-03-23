@@ -16,4 +16,5 @@ pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &
     else if optheader.MAGIC.eq(&0x10b) {
         println!("{}", optheader.WINDETAILS32)
     }
+    println!("{}", optheader.DATADIRECTORIES);
 }

@@ -38,6 +38,8 @@ fn main() -> io::Result<()> {
 
     let header_opt = make_optional_header(&buffer, cursor);
 
+    //cur +=
+
     show_headers(&header_dos.0, &header_coff, &header_opt);
 
     if header_dos.0.has_rich {

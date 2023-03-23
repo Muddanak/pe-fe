@@ -87,7 +87,7 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
         signature = val.unwrap();
     }
 
-    println!("Rich Signature ('DanS'): {}", signature);
+    println!("\n---------Rich Signature ('DanS')--------\n{}", signature);
     let mut hashvec: Vec<u32> = Vec::new();
 
     let mut hash = sha2::Sha256::new();
