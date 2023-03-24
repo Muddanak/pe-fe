@@ -1,0 +1,5 @@
+[package]
+author = "Muddanak"
+
+[build]
+rustflags = ['--remap-path-prefix', 'C:\pe-fe=.\ ']
