@@ -1,3 +1,4 @@
+
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use sha2::Digest;
 
@@ -5,7 +6,7 @@ use crate::coff_header::enums::PEFILEERROR;
 use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
 
 use crate::dos_header::structs::DosHeader;
-use crate::utils::index_of_string_in_u8;
+use crate::utils::{bytes_to_hex_string, index_hex_string_in_hex_data};
 
 pub mod structs;
 pub mod enums;
@@ -46,7 +47,10 @@ fn check_for_stub(data: &[u8]) -> bool {
 
 fn get_rich_xor_key(data: &[u8]) -> u32 {
 
-    let offset = index_of_string_in_u8(data, "Rich");
+    //let offset = index_of_string_in_u8(data, "Rich");
+    let newdata = bytes_to_hex_string(data);
+    let offset = index_hex_string_in_hex_data(newdata, bytes_to_hex_string(b"Rich"));
+    dbg!(offset);
     /*let mut offset = 0;
     if "Rich".chars().all(|x| data.contains(&(x as u8)))
     {

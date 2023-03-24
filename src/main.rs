@@ -46,5 +46,6 @@ fn main() -> io::Result<()> {
         print_rich_sha256_hash(&header_dos.0);
     }
 
+
     Ok(())
 }

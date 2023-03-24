@@ -1,6 +1,8 @@
 use crate::coff_header::enums::PEFILEERROR;
 use std::fs::File;
 use std::io::Read;
+use std::process::exit;
+use std::fmt::Write;
 
 
 pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
@@ -23,6 +25,54 @@ pub fn index_of_string_in_u8(data: &[u8], text_to_find: &str) -> usize {
     }
     0
 }
+
+#[allow(dead_code)]
+pub fn bytes_to_hex_string(data: &[u8]) -> String {
+
+    let mut buffer = String::new();
+
+    for &x in data {
+        if let Err(e) = write!(&mut buffer, "{:x?}", x) {
+            println!("Failed to convert byte to hex! Got Error: {e}");
+            exit(1)
+        }
+    }
+
+    buffer
+}
+
+pub fn index_hex_string_in_hex_data(data: String, find: String) -> usize {
+
+    if !data.contains(&find) {
+        println!("The string to find was not in the data");
+        return 0
+    }
+
+    if let Some(index) = data.find(&find) {
+        return index/2
+    }
+
+    0
+}
+
+
+/*pub fn match_exact_string(inp: &[u8], pattern: &str) -> usize {
+
+    let size = pattern.len();
+
+    let mut data = inp.bytes();
+    let counter:usize = 0;
+    'upper: for (x,y) in data.enumerate() {
+        if y.unwrap() == *pattern.as_bytes().get(counter).unwrap() {
+            for z in 1..size {
+                if pattern.as_bytes().get(z) != *data[x+z..x+z] {
+
+                }
+            }
+        }
+    }
+    0
+}*/
 
 pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
 
@@ -47,6 +97,7 @@ pub fn match_gen_in_map<T: PartialEq>(map_name: &phf::Map<&str, T>, item: T) -> 
 
 #[cfg(test)]
 mod tests {
+    use std::io::Bytes;
     use phf::phf_map;
     use super::*;
 
@@ -59,5 +110,11 @@ mod tests {
     #[test]
     fn test_match_u16_in_map(){
         assert_eq!(match_u16_in_map(&MAP_TEST_1, 0x0101), "Test");
+    }
+
+    #[test]
+    fn test_index_find() {
+        let data: Bytes<&[u8]> = b"This is Rich DOS MODE".bytes();
+        println!("{data:#?}");
     }
 }
