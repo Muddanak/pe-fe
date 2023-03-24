@@ -2,11 +2,12 @@
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use sha2::Digest;
 
-use crate::coff_header::enums::PEFILEERROR;
-use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
+use crate::lib as crlib;
 
-use crate::dos_header::structs::DosHeader;
-use crate::utils::{bytes_to_hex_string, index_hex_string_in_hex_data};
+use crlib::coff_header::enums::PEFILEERROR;
+use crlib::coff_header::enums::PEFILEERROR::NoMZinFile;
+use crlib::dos_header::structs::DosHeader;
+use crlib::utils::{bytes_to_hex_string, index_hex_string_in_hex_data};
 
 pub mod structs;
 pub mod enums;

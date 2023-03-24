@@ -1,4 +1,6 @@
-use crate::coff_header::enums::PEFILEERROR;
+use crate::lib as crlib;
+
+use crlib::coff_header::enums::PEFILEERROR;
 use std::fs::File;
 use std::io::Read;
 use std::process::exit;

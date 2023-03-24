@@ -1,14 +1,16 @@
 
-use pe_fe::dos_header::{make_dos_header, print_rich_sha256_hash, check_for_mz};
+
 
 use clap::{arg, Parser};
 use std::fs::File;
 use std::{io, process};
 use std::io::{BufReader, Read};
 
-use pe_fe::coff_header::make_coff_header;
-use pe_fe::optional_header::make_optional_header;
-use pe_fe::show_headers;
+use pe_fe::{lib as pefelib, show_headers};
+use pefelib::dos_header::{make_dos_header, print_rich_sha256_hash, check_for_mz};
+
+use pefelib::coff_header::make_coff_header;
+use pefelib::optional_header::make_optional_header;
 
 #[derive(Parser, Debug)]
 #[command(author, version)]

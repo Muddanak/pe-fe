@@ -1,7 +1,9 @@
 use byteorder::{ByteOrder, LittleEndian};
-use crate::optional_header::enums::{DLL_CHARACTERISTICS, MAGIC, SUBSYSTEM};
-use crate::optional_header::structs::{OptHeader, OptHeaderDataDirectories, OptHeaderPE32Details, OptHeaderPE32PlusDetails};
-use crate::utils::{match_gen_in_map};
+
+use crate::lib as crlib;
+use crlib::optional_header::enums::{DLL_CHARACTERISTICS, MAGIC, SUBSYSTEM};
+use crlib::optional_header::structs::{OptHeader, OptHeaderDataDirectories, OptHeaderPE32Details, OptHeaderPE32PlusDetails};
+use crlib::utils::{match_gen_in_map};
 
 pub(crate) mod structs;
 pub(crate) mod enums;

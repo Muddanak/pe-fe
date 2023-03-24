@@ -1,11 +1,13 @@
-use crate::coff_header::structs::CoffHeader;
-use crate::dos_header::structs::DosHeader;
-use crate::optional_header::structs::OptHeader;
+use crate::lib::coff_header::structs::CoffHeader;
+use crate::lib::dos_header::structs::DosHeader;
+use crate::lib::optional_header::structs::OptHeader;
 
-pub mod coff_header;
-pub mod dos_header;
-pub mod optional_header;
-pub mod utils;
+pub mod lib {
+    pub mod coff_header;
+    pub mod dos_header;
+    pub mod optional_header;
+    pub mod utils;
+}
 
 #[allow(dead_code)]
 pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &OptHeader) {

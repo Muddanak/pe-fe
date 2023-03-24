@@ -1,9 +1,9 @@
 
 use byteorder::{LittleEndian, ByteOrder};
 use chrono::{TimeZone, Utc};
-use crate::coff_header::enums::{CHARACTERISTICS, MACHINE};
-use crate::coff_header::structs::CoffHeader;
-use crate::utils::{match_gen_in_map};
+use crate::lib::coff_header::enums::{CHARACTERISTICS, MACHINE};
+use crate::lib::coff_header::structs::CoffHeader;
+use crate::lib::utils::{match_gen_in_map};
 
 pub mod enums;
 pub mod structs;
