@@ -1,3 +1,8 @@
+pub use self::lib::utils;
+pub use self::lib::coff_header;
+pub use self::lib::dos_header;
+pub use self::lib::optional_header;
+
 use crate::lib::coff_header::structs::CoffHeader;
 use crate::lib::dos_header::structs::DosHeader;
 use crate::lib::optional_header::structs::OptHeader;

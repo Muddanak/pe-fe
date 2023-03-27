@@ -1,6 +1,5 @@
-use crate::lib as crlib;
 
-use crlib::coff_header::enums::PEFILEERROR;
+use crate::coff_header::enums::PEFILEERROR;
 use std::fs::File;
 use std::io::Read;
 use std::process::exit;
@@ -56,25 +55,6 @@ pub fn index_hex_string_in_hex_data(data: String, find: String) -> usize {
 
     0
 }
-
-
-/*pub fn match_exact_string(inp: &[u8], pattern: &str) -> usize {
-
-    let size = pattern.len();
-
-    let mut data = inp.bytes();
-    let counter:usize = 0;
-    'upper: for (x,y) in data.enumerate() {
-        if y.unwrap() == *pattern.as_bytes().get(counter).unwrap() {
-            for z in 1..size {
-                if pattern.as_bytes().get(z) != *data[x+z..x+z] {
-
-                }
-            }
-        }
-    }
-    0
-}*/
 
 pub fn match_u16_in_map(map_name: &phf::Map<&str, u16>, item: u16) -> String {
 
