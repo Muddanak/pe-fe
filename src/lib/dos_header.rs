@@ -25,6 +25,9 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
     if header.has_stub {
         cur += 0x40;
     }
+
+    //println!("PE offset at {:#x}", header.pe_offset);
+    //println!("Offset is currently at {:#x}", cur);
     //println!("Made it past stub, got {} and PE is {} and cursor is {}", header.has_stub, header.pe_offset, cur);
 
     header.rich_xor_key = get_rich_xor_key(&data[cur..header.pe_offset]);
@@ -50,8 +53,9 @@ fn get_rich_xor_key(data: &[u8]) -> u32 {
 
     //let offset = index_of_string_in_u8(data, "Rich");
     let newdata = bytes_to_hex_string(data);
+    //println!("newdata is {newdata}");
     let offset = index_hex_string_in_hex_data(newdata, bytes_to_hex_string(b"Rich"));
-    dbg!(offset);
+    //println!("Rich may be at {:#x}", offset);
     /*let mut offset = 0;
     if "Rich".chars().all(|x| data.contains(&(x as u8)))
     {
