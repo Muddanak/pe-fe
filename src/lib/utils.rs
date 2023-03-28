@@ -45,7 +45,7 @@ pub fn bytes_to_hex_string(data: &[u8]) -> String {
 pub fn index_hex_string_in_hex_data(data: String, find: String) -> usize {
 
     if !data.contains(&find) {
-        println!("The string to find was not in the data");
+        //println!("The string to find was not in the data");
         return 0
     }
 

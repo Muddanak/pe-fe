@@ -23,7 +23,11 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
     cur += 4; //cur = 12
     optheader.SIZEOFUNINITDATA = LittleEndian::read_u32(&data[cur..cur+4]);
     cur += 4; //cur = 16
+    optheader.ADDROFENTRYPOINT = LittleEndian::read_u32(&data[cur..cur+4]);
+    cur += 4; //cur = 20
     optheader.BASEOFCODE = LittleEndian::read_u32(&data[cur..cur+4]);
+    cur += 4; //cur = 24
+
 
     if optheader.MAGIC.eq(&0x20b) {
         let sizes: Vec<usize> = vec![8, 4, 4, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2, 8, 8, 8, 8, 4, 4];
@@ -41,6 +45,10 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         cur += veciter.next().unwrap();
         wind.MINOROSVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
         cur += veciter.next().unwrap();
+        wind.MAJORIMGVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
+        wind.MINORIMGVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
         wind.MAJORSUBVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
         cur += veciter.next().unwrap();
         wind.MINORSUBVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
@@ -53,24 +61,17 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         cur += veciter.next().unwrap();
         wind.CHECKSUM = LittleEndian::read_u32(&data[cur..cur+4]);
         cur += veciter.next().unwrap();
-
-        let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
-        for (charac, charac_id) in SUBSYSTEM.into_iter() {
-            if (comparator & *charac_id).ne(&0)  | charac_id.eq(&0) {
-                tmpvec.push(String::from(*charac));
-            }
-        }
-        wind.SUBSYSTEM = tmpvec.join("|");
-        tmpvec.clear();
+        wind.SUBSYSTEM = match_gen_in_map(&SUBSYSTEM, LittleEndian::read_u16(&data[cur..cur+2]));
         cur += veciter.next().unwrap();
 
         let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
         for (charac, charac_id) in DLL_CHARACTERISTICS.into_iter() {
-            if comparator & *charac_id != 0 {
+            if (comparator & *charac_id).ne(&0) {
                 tmpvec.push(String::from(*charac));
             }
         }
-        wind.DLLCHARACTERISTICS = tmpvec.join("|");
+
+        wind.DLLCHARACTERISTICS = tmpvec.join(" | ");
         cur += veciter.next().unwrap();
         wind.SIZEOFSTACKRESERVE = LittleEndian::read_u64(&data[cur..cur+8]);
         cur += veciter.next().unwrap();
@@ -105,6 +106,10 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         cur += veciter.next().unwrap();
         wind.MINOROSVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
         cur += veciter.next().unwrap();
+        wind.MAJORIMGVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
+        wind.MINORIMGVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
+        cur += veciter.next().unwrap();
         wind.MAJORSUBVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
         cur += veciter.next().unwrap();
         wind.MINORSUBVERSION = LittleEndian::read_u16(&data[cur..cur+2]);
@@ -117,15 +122,7 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
         cur += veciter.next().unwrap();
         wind.CHECKSUM = LittleEndian::read_u32(&data[cur..cur+4]);
         cur += veciter.next().unwrap();
-
-        let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
-        for (charac, charac_id) in SUBSYSTEM.into_iter() {
-            if (comparator & *charac_id).ne(&0)  | charac_id.eq(&0) {
-                tmpvec.push(String::from(*charac));
-            }
-        }
-        wind.SUBSYSTEM = tmpvec.join("|");
-        tmpvec.clear();
+        wind.SUBSYSTEM = match_gen_in_map(&SUBSYSTEM, LittleEndian::read_u16(&data[cur..cur+2]));
         cur += veciter.next().unwrap();
 
         let comparator = LittleEndian::read_u16(&data[cur..cur+2]);
@@ -194,6 +191,6 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
 
     }
 
-    println!("{cur}");
+    //println!("{cur}");
     optheader
 }

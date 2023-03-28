@@ -9,20 +9,19 @@ pub static MAGIC: phf::Map<&'static str, u16> = phf_map!(
 
 #[allow(dead_code)]
 pub static SUBSYSTEM: phf::Map<&'static str, u16> = phf_map!(
-    "UNKNOWN " =>	0x0000,
-    "NATIVE" =>	1,
-    "WINDOWS_GUI " =>	2,
-    "WINDOWS_CUI " =>	3,
-    "OS2_CUI " =>	5,
-    "POSIX_CUI " =>	7,
-    "NATIVE_WINDOWS " =>	8,
-    "WINDOWS_CE_GUI " =>	9,
-    "EFI_APPLICATION " =>	10,
-    "EFI_BOOT_ SERVICE_DRIVER " =>	11,
-    "EFI_RUNTIME_ DRIVER " =>	12,
-    "EFI_ROM " =>	13,
-    "XBOX " =>	14,
-    "WINDOWS_BOOT_APPLICATION " =>	16,
+    "NATIVE" =>	0x01,
+    "WINDOWS_GUI " =>	0x02,
+    "WINDOWS_CUI " =>	0x03,
+    "OS2_CUI " =>	0x05,
+    "POSIX_CUI " =>	0x07,
+    "NATIVE_WINDOWS " =>	0x08,
+    "WINDOWS_CE_GUI " =>	0x09,
+    "EFI_APPLICATION " =>	0x0a,
+    "EFI_BOOT_ SERVICE_DRIVER " =>	0x0b,
+    "EFI_RUNTIME_ DRIVER " =>	0x0c,
+    "EFI_ROM " =>	0x0d,
+    "XBOX " =>	0x0e,
+    "WINDOWS_BOOT_APPLICATION " =>	0x0f,
 );
 
 #[allow(dead_code)]

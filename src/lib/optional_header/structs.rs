@@ -30,8 +30,8 @@ impl Display for OptHeader {
         write!(f, "\n------Optional Header Information--------\n\
         --Magic  --MajorLinker  --MinorLinker  --Size of Code\
         \n       \\_{:#x}        \\_{}           \\_{}            \\_{}\n\
-        --Size Init Data  --Size Uninit Data  --Addr Entry Point --Base of Code  --Base of Data\
-        \n           \\_{}           \\_{}                  \\_{:#x}         \\_{:#x}      \\_{:#x}\
+        --Size Init Data  --Size Uninit Data  --Entry Point --Base of Code  --Base of Data\
+        \n           \\_{}           \\_{}            \\_{:#x}         \\_{:#x}      \\_{:#x}\
         \n\n--------Details--------\n{}",
         self.MAGIC,
         self.MAJORLINKER,
@@ -110,7 +110,7 @@ impl Display for OptHeaderPE32PlusDetails {
                Checksum: {:#x} |\tSubsystem: {} |\t\nDLL Characteristics: {}\n\
                Size of Stack Reserve: {:#x} |\tSize of Stack Commit: {:#x}\n\
                Size of Heap Reserve: {:#x} |\tSize of Heap Commit: {:#x}\n\
-               Loader Flags: {:#x} |\tNumber of RVA and Sizes: {:#x}",
+               Loader Flags: {:#x} |\tNumber of RVA and Sizes: {}",
                self.IMAGEBASE, self.SECTIONALIGNMENT, self.FILEALIGNMENT, self.MAJOROSVERSION, self.MINOROSVERSION, self.MAJORIMGVERSION, self.MINORIMGVERSION,
         self.MAJORSUBVERSION, self.MINORSUBVERSION, self.WIN32VERSION, self.SIZEOFIMAGE, self.SIZEOFHEADERS, self.CHECKSUM, self.SUBSYSTEM, self.DLLCHARACTERISTICS,
         self.SIZEOFSTACKRESERVE, self.SIZEOFSTACKCOMMIT, self.SIZEOFHEAPRESERVE, self.SIZEOFHEAPCOMMIT, self.LOADERFLAGS, self.NUMBERRVASIDES)
