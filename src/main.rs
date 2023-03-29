@@ -4,6 +4,7 @@ use std::io::{BufReader, Read};
 use std::{io, process};
 
 use pe_fe::{lib as pefelib, show_headers};
+use pe_fe::sections_header::make_section_header;
 use pefelib::dos_header::{check_for_mz, make_dos_header, print_rich_sha256_hash};
 
 use pefelib::coff_header::make_coff_header;
@@ -38,7 +39,9 @@ fn main() -> io::Result<()> {
 
     cursor += 20;
 
-    let (header_opt, cursor) = make_optional_header(&buffer, cursor);
+    let (header_opt, _cursor) = make_optional_header(&buffer, cursor);
+
+    let secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
 
 
     show_headers(&header_dos.0, &header_coff, &header_opt);

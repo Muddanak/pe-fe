@@ -2,6 +2,7 @@ pub use self::lib::coff_header;
 pub use self::lib::dos_header;
 pub use self::lib::optional_header;
 pub use self::lib::utils;
+pub use self::lib::sections_header;
 
 use crate::lib::coff_header::structs::CoffHeader;
 use crate::lib::dos_header::structs::DosHeader;
@@ -12,6 +13,7 @@ pub mod lib {
     pub mod dos_header;
     pub mod optional_header;
     pub mod utils;
+    pub mod sections_header;
 }
 
 #[allow(dead_code)]
