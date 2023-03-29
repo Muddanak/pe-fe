@@ -8,7 +8,7 @@ use byteorder::{ByteOrder, LittleEndian};
 pub(crate) mod enums;
 pub(crate) mod structs;
 
-pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
+pub fn make_optional_header(data: &[u8], cursor: usize) -> (OptHeader, usize) {
     let mut optheader = OptHeader::new();
     let mut cur: usize = cursor;
 
@@ -135,7 +135,7 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
                 tmpvec.push(String::from(*charac));
             }
         }
-        wind.DLLCHARACTERISTICS = tmpvec.join("|");
+        wind.DLLCHARACTERISTICS = tmpvec.join(" | ");
         cur += veciter.next().unwrap();
         wind.SIZEOFSTACKRESERVE = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += veciter.next().unwrap();
@@ -195,5 +195,5 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> OptHeader {
     }
 
     //println!("{cur}");
-    optheader
+    (optheader, cur)
 }

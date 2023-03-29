@@ -38,9 +38,8 @@ fn main() -> io::Result<()> {
 
     cursor += 20;
 
-    let header_opt = make_optional_header(&buffer, cursor);
+    let (header_opt, cursor) = make_optional_header(&buffer, cursor);
 
-    //cur +=
 
     show_headers(&header_dos.0, &header_coff, &header_opt);
 
