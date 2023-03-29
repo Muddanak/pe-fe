@@ -37,8 +37,8 @@ impl CoffHeaderDetails {
 
 impl Display for CoffHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "\n--------COFF Header--------\nMachine:\t{:#x}\t\t| Sections:\t{:#x}\t| DateStamp:\t{}\n\
-        SymbolsAt:\t{:#x}\t| # of Symbols:\t{:#x}\nOptional: \t\t{:#x}\nCharacteristics: \t{:#b}\n\n{}",
+        write!(f, "\n--------COFF Header--------\nMachine:\t{:#x}\t\t \nSections:\t{:#}\t \nDateStamp:\t{}\n\
+        SymbolsAt:\t{:#x}\t \n# of Symbols:\t{:#}\nOptional: \t{:#x}\nCharacteristics: {:#b}\n\n{}",
         self.HE_MACHINEINFO, self.HE_SECTIONS, self.HE_DATESTAMP_UTC, self.HE_POINTERTOSYMBOLS, self.HE_NUMBEROFSYMBOLS, self.HE_OPTIONAL, self.HE_CHARACTERISTICS, self.HE_DETAILS)
     }
 }

@@ -19,8 +19,8 @@ struct Args {
 fn main() -> io::Result<()> {
     let args = Args::parse();
     let mut reader = BufReader::new(File::open(args.filename)?);
-    let mut buffer = [0; 1024];
-    reader.read_exact(&mut buffer)?;
+    let mut buffer = [0; 0x800];
+    let _size_read = reader.read(&mut buffer)?;
 
     let mz_offset = match check_for_mz(&buffer) {
         Ok(offset) => offset,

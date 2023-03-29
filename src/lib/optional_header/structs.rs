@@ -30,9 +30,9 @@ impl Display for OptHeader {
         write!(
             f,
             "\n------Optional Header Information--------\n\
-            Magic:\t\t{:#x}\t\t| Major Linker:\t{:#x}\t\t| Minor Linker:\t{:#x}\n\
-            Code Size:\t{:#x}\t| Init Size:\t{:#x}\t| Uninit Size:\t{:#x}\n\
-            Entry Point:\t{:#x}\t\t| Base of Code:\t{:#x}\t\t| Base of Data:\t{:#x}\n\n\
+            Magic:\t\t{:#x}\t\nMajor Linker:\t{:#}\t\nMinor Linker:\t{:#}\n\
+            Code Size:\t{:#}\nInit Size:\t{:#}\nUninit Size:\t{:#}\n\
+            Entry Point:\t{:#x}\nBase of Code:\t{:#x}\nBase of Data:\t{:#x}\n\n\
             --------Details--------\n{}",
             self.MAGIC,
             self.MAJORLINKER,
@@ -63,7 +63,7 @@ impl OptHeaderDetails {
 
 impl Display for OptHeaderDetails {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Magic: \t{}", self.MAGIC,)
+        write!(f, "Magic: \t\t\t{}", self.MAGIC,)
     }
 }
 
@@ -104,15 +104,18 @@ impl Display for OptHeaderPE32PlusDetails {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Image Base:\t\t{:#x}\t| Section Alignment: {:#x}\t| File Alignment: {:#x}\n\
-               Major OS Version:\t{:#x}\t\t| Minor OS Version: {:#x}\t\t| Major IMG Version: {:#x}\n\
-               Minor IMG Version:\t{:#x}\t\t| Major Subsys Ver: {:#x}\t\t| Minor Subsys Ver: {:#x}\n\
-               Win32 Version:\t\t{:#x}\t\t| Size of IMG: {:#x}\t| Size of Headers: {:#x}\n\
-               Checksum:\t\t{:#x}\t| Subsystem: {}\t\n\
-               Size of Stack Reserve:\t{:#x}\t| Size of Stack Commit: {:#x}\n\
-               Size of Heap Reserve: \t{:#x}\t| Size of Heap Commit: {:#x}\n\
-               Loader Flags:\t\t{:#x}\t\t| Number of RVA and Sizes: {}\n\nDLL Characteristics: {}",
+            "Image Base:\t\t{:#x}\nWin32 Version:\t\t{:#}\n\
+               Section Alignment:\t{:#x}\nFile Alignment:\t\t{:#x}\n\
+               Major OS Version:\t{:#}\nMinor OS Version:\t{:#}\n\
+               Major IMG Version:\t{:#}\nMinor IMG Version:\t{:#}\n\
+               Major Subsys Ver:\t{:#}\nMinor Subsys Ver:\t{:#}\n\
+               Size of IMG:\t\t{:#}\nSize of Headers:\t{:#}\n\
+               Checksum:\t\t{:#x}\nSubsystem:\t\t{}\t\n\
+               Size of Stack Reserve:\t{:#x}\nSize of Stack Commit:\t{:#x}\n\
+               Size of Heap Reserve: \t{:#x}\nSize of Heap Commit:\t{:#x}\n\
+               Loader Flags:\t\t{:#x}\n# of RVA and Sizes:\t{}\n\nDLL Characteristics: {}",
             self.IMAGEBASE,
+            self.WIN32VERSION,
             self.SECTIONALIGNMENT,
             self.FILEALIGNMENT,
             self.MAJOROSVERSION,
@@ -121,7 +124,6 @@ impl Display for OptHeaderPE32PlusDetails {
             self.MINORIMGVERSION,
             self.MAJORSUBVERSION,
             self.MINORSUBVERSION,
-            self.WIN32VERSION,
             self.SIZEOFIMAGE,
             self.SIZEOFHEADERS,
             self.CHECKSUM,
@@ -240,12 +242,22 @@ impl Display for OptHeaderDataDirectories {
         write!(
             f,
             "\n--------Data Directories--------\n\
-        Export:\t\t{:#x}\t\t| Import:\t{:#x}\t| Resource:\t\t{:#x}\n\
-        Exception:\t{:#x}\t| Certificate:\t{:#x}\t\t| Base Relocation:\t{:#x}\n\
-        Debug:\t\t{:#x}\t\t| Architecture:\t{:#x}\t\t| Global Ptr:\t\t{:#x}\t\n\
-        TLS:\t\t{:#x}\t| Load Config:\t{:#x}\t\t| Bound Import:\t\t{:#x}\t\n\
-        IAT:\t\t{:#x}\t| Delay Import:\t{:#x}\t\n\
-        CLR Runtime:\t{:#x}\t\t| ReservedZero:\t{:#x}\t",
+        Export:\t\t{:#x}\n\
+        Import:\t\t{:#x}\n\
+        Resource:\t{:#x}\n\
+        Exception:\t{:#x}\n\
+        Certificate:\t{:#x}\n\
+        Base Reloc:\t{:#x}\n\
+        Debug:\t\t{:#x}\n\
+        Architecture:\t{:#x}\n\
+        Global Ptr:\t{:#x}\n\
+        TLS:\t\t{:#x}\t\n\
+        Load Config:\t{:#x}\n\
+        Bound Import:\t{:#x}\n\
+        IAT:\t\t{:#x}\n\
+        Delay Import:\t{:#x}\n\
+        CLR Runtime:\t{:#x}\n\
+        ReservedZero:\t{:#x}\n",
             self.EXPORTTABLE,
             self.IMPORTTABLE,
             self.RESOURCETABLE,
