@@ -1,12 +1,11 @@
-
-use byteorder::{LittleEndian, ByteOrder};
-use chrono::{TimeZone, Utc};
 use crate::lib::coff_header::enums::{CHARACTERISTICS, MACHINE};
 use crate::lib::coff_header::structs::CoffHeader;
-use crate::lib::utils::{match_gen_in_map};
+use crate::lib::utils::match_gen_in_map;
+use byteorder::{ByteOrder, LittleEndian};
+use chrono::{TimeZone, Utc};
 
-pub mod enums;
-pub mod structs;
+pub(crate) mod enums;
+pub(crate) mod structs;
 
 pub fn make_coff_header(data: &[u8], offset: usize) -> CoffHeader {
     let mut coffheader = CoffHeader::new();
@@ -14,19 +13,19 @@ pub fn make_coff_header(data: &[u8], offset: usize) -> CoffHeader {
 
     let mut cur = offset;
 
-    coffheader.HE_MACHINEINFO = LittleEndian::read_u16(&data[cur..cur+2]);
+    coffheader.HE_MACHINEINFO = LittleEndian::read_u16(&data[cur..cur + 2]);
     cur += 2;
-    coffheader.HE_SECTIONS = LittleEndian::read_u16(&data[cur..cur+2]);
+    coffheader.HE_SECTIONS = LittleEndian::read_u16(&data[cur..cur + 2]);
     cur += 2;
-    coffheader.HE_DATESTAMP_UTC = LittleEndian::read_u32(&data[cur..cur+4]);
+    coffheader.HE_DATESTAMP_UTC = LittleEndian::read_u32(&data[cur..cur + 4]);
     cur += 4;
-    coffheader.HE_POINTERTOSYMBOLS = LittleEndian::read_u32(&data[cur..cur+4]);
+    coffheader.HE_POINTERTOSYMBOLS = LittleEndian::read_u32(&data[cur..cur + 4]);
     cur += 4;
-    coffheader.HE_NUMBEROFSYMBOLS = LittleEndian::read_u32(&data[cur..cur+4]);
+    coffheader.HE_NUMBEROFSYMBOLS = LittleEndian::read_u32(&data[cur..cur + 4]);
     cur += 4;
-    coffheader.HE_OPTIONAL = LittleEndian::read_u16(&data[cur..cur+2]);
+    coffheader.HE_OPTIONAL = LittleEndian::read_u16(&data[cur..cur + 2]);
     cur += 2;
-    coffheader.HE_CHARACTERISTICS = LittleEndian::read_u16(&data[cur..cur+2]);
+    coffheader.HE_CHARACTERISTICS = LittleEndian::read_u16(&data[cur..cur + 2]);
 
     coffheader.HE_DETAILS.MACHINE = match_gen_in_map(&MACHINE, coffheader.HE_MACHINEINFO);
 
@@ -46,7 +45,6 @@ pub fn make_coff_header(data: &[u8], offset: usize) -> CoffHeader {
 
     coffheader
 }
-
 
 /*
 pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> CoffHeader {
@@ -130,4 +128,3 @@ pub fn _make_header_from_info(chunk: &[u8], offset: usize) -> CoffHeader {
     new_header
 }
 */
-

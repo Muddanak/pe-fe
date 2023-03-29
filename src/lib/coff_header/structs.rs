@@ -1,6 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
 
-
 #[allow(non_snake_case)]
 #[derive(Debug, Clone, Default)]
 pub struct CoffHeader {
@@ -38,15 +37,18 @@ impl CoffHeaderDetails {
 
 impl Display for CoffHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Machine:\t{:#x}\tSections:\t{:#x}\tDateStamp:\t{}\n\
-        SymbolsAt:\t{:#x}\t# of Symbols:\t{:#x}\nOptional: \t\t{:#x}\nCharacteristics: \t{:#b}\n\n{}",
+        write!(f, "\n--------COFF Header--------\nMachine:\t{:#x}\t\t| Sections:\t{:#x}\t| DateStamp:\t{}\n\
+        SymbolsAt:\t{:#x}\t| # of Symbols:\t{:#x}\nOptional: \t\t{:#x}\nCharacteristics: \t{:#b}\n\n{}",
         self.HE_MACHINEINFO, self.HE_SECTIONS, self.HE_DATESTAMP_UTC, self.HE_POINTERTOSYMBOLS, self.HE_NUMBEROFSYMBOLS, self.HE_OPTIONAL, self.HE_CHARACTERISTICS, self.HE_DETAILS)
     }
 }
 
 impl Display for CoffHeaderDetails {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Machine: \t\t{}\nDatestamp UTC: \t\t{}\nCharacteristics: \t{}\n",
-        self.MACHINE, self.DATESTAMP_UTC, self.CHARACTERISTICS)
+        write!(
+            f,
+            "Machine: \t\t{}\nDatestamp UTC: \t\t{}\nCharacteristics: \t{}\n",
+            self.MACHINE, self.DATESTAMP_UTC, self.CHARACTERISTICS
+        )
     }
 }

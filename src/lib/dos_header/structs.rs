@@ -11,7 +11,6 @@ pub struct DosHeader {
     pub rich_ids: Vec<u32>,
 }
 
-
 impl Display for DosHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "DOS Header\n---------\n\

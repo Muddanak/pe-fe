@@ -1,24 +1,19 @@
-
+use crate::coff_header::enums::PEFILEERROR;
+use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
+use crate::dos_header::structs::DosHeader;
+use crate::utils::{bytes_to_hex_string, index_hex_string_in_hex_data};
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use sha2::Digest;
 
-use crate::lib as crlib;
-
-use crlib::coff_header::enums::PEFILEERROR;
-use crlib::coff_header::enums::PEFILEERROR::NoMZinFile;
-use crlib::dos_header::structs::DosHeader;
-use crlib::utils::{bytes_to_hex_string, index_hex_string_in_hex_data};
-
-pub mod structs;
-pub mod enums;
+pub(crate) mod enums;
+pub(crate) mod structs;
 
 pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
-
     let mut header = DosHeader::new();
     let mut cur: usize = 0x3c; //cur = 60
 
     header.mz_offset = mz_found; //should be 0x00
-    header.pe_offset = LittleEndian::read_u32(&data[cur..cur+4]) as usize;
+    header.pe_offset = LittleEndian::read_u32(&data[cur..cur + 4]) as usize;
     //println!("Cursor: {:#04x}", cur);
     cur += 0x04; //cur = 64/0x40
     header.has_stub = check_for_stub(&data[cur..header.pe_offset]); //Read from data[64] to end
@@ -36,21 +31,16 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
         header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
 
-
-
-
     (header, cur)
 }
 
 fn check_for_stub(data: &[u8]) -> bool {
-
     //let offset = index_of_string_in_u8(data, "This program");
 
-    "This program".bytes().all(|x|data.contains(&x))
+    "This program".bytes().all(|x| data.contains(&x))
 }
 
 fn get_rich_xor_key(data: &[u8]) -> u32 {
-
     //let offset = index_of_string_in_u8(data, "Rich");
     let newdata = bytes_to_hex_string(data);
     //println!("newdata is {newdata}");
@@ -84,7 +74,7 @@ fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
         }
         rich_ids.push(u32::from_be_bytes(hold));
     }
-    
+
     rich_ids
 }
 
@@ -106,9 +96,7 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
         hashvec.push(header.rich_ids[id_num + 1]);
     }
 
-    hash.update(
-        hashvec.iter().map(|x| x.to_string()).collect::<String>()
-    );
+    hash.update(hashvec.iter().map(|x| x.to_string()).collect::<String>());
 
     println!("SHA-256 of Rich Header:\n\t{:#04x}\n", hash.finalize());
 }
@@ -126,11 +114,10 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
 ///
 ///
 pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
-
     let data = &chunk[..2];
     if "MZ".chars().all(|item| data.contains(&(item as u8))) {
         Ok(0x00)
-    }else {
+    } else {
         Err(NoMZinFile)
     }
 }
