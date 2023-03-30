@@ -2,7 +2,7 @@ use crate::optional_header::enums::{DLL_CHARACTERISTICS, MAGIC, SUBSYSTEM};
 use crate::optional_header::structs::{
     OptHeader, OptHeaderDataDirectories, OptHeaderPE32Details, OptHeaderPE32PlusDetails,
 };
-use crate::utils::match_gen_in_map;
+use crate::utils::{match_gen_in_map, u64_to_u32};
 use byteorder::{ByteOrder, LittleEndian};
 
 pub(crate) mod enums;
@@ -158,37 +158,37 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> (OptHeader, usize) {
         let mut wind = OptHeaderDataDirectories::default();
         let mut veciter = sizes.iter();
 
-        wind.EXPORTTABLE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.EXPORTTABLE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.IMPORTTABLE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.IMPORTTABLE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.RESOURCETABLE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.RESOURCETABLE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.EXCEPTIONTABLE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.EXCEPTIONTABLE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.CERTTABLE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.CERTTABLE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.BASERELOCATION = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.BASERELOCATION = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.DEBUG = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.DEBUG = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.ARCHITECTURE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.ARCHITECTURE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.GLOBALPTR = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.GLOBALPTR = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.TLSTABLE = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.TLSTABLE = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.LOADCONFIG = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.LOADCONFIG = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.BOUNDIMPORT = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.BOUNDIMPORT = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.IAT = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.IAT = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.DELAYIMPDESC = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.DELAYIMPDESC = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.CLRRUNTIME = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.CLRRUNTIME = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
-        wind.RESERVEDZERO = LittleEndian::read_u64(&data[cur..cur + 8]);
+        wind.RESERVEDZERO = u64_to_u32(LittleEndian::read_u64(&data[cur..cur + 8]));
         cur += veciter.next().unwrap();
 
         optheader.DATADIRECTORIES = wind;

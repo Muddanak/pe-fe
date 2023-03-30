@@ -2,6 +2,7 @@ use crate::coff_header::enums::PEFILEERROR;
 use std::fmt::Write;
 use std::fs::File;
 use std::io::Read;
+use std::ops::{BitAnd, Shr};
 use std::process::exit;
 
 pub fn get_large_data_chunk(mut filename: File) -> Vec<u8> {
@@ -61,6 +62,12 @@ pub fn match_gen_in_map<T: PartialEq>(map_name: &phf::Map<&str, T>, item: T) -> 
         Some((word, _y)) => String::from(*word),
         None => String::from("None"),
     }
+}
+
+pub fn u64_to_u32(inp: u64) -> (u32, u32) {
+    let high: u32 = inp.bitand(0xFFFFFFFF00000000).shr(32) as u32;
+    let low: u32 = inp.bitand(0x00000000FFFFFFFF) as u32;
+    (high, low)
 }
 
 ///

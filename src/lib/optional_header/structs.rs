@@ -212,22 +212,22 @@ impl Display for OptHeaderPE32Details {
 #[allow(non_snake_case)]
 #[derive(Debug, Clone, Default)]
 pub struct OptHeaderDataDirectories {
-    pub EXPORTTABLE: u64,
-    pub IMPORTTABLE: u64,
-    pub RESOURCETABLE: u64,
-    pub EXCEPTIONTABLE: u64,
-    pub CERTTABLE: u64,
-    pub BASERELOCATION: u64,
-    pub DEBUG: u64,
-    pub ARCHITECTURE: u64,
-    pub GLOBALPTR: u64,
-    pub TLSTABLE: u64,
-    pub LOADCONFIG: u64,
-    pub BOUNDIMPORT: u64,
-    pub IAT: u64,
-    pub DELAYIMPDESC: u64,
-    pub CLRRUNTIME: u64,
-    pub RESERVEDZERO: u64,
+    pub EXPORTTABLE: (u32, u32),
+    pub IMPORTTABLE: (u32, u32),
+    pub RESOURCETABLE: (u32, u32),
+    pub EXCEPTIONTABLE: (u32, u32),
+    pub CERTTABLE: (u32, u32),
+    pub BASERELOCATION: (u32, u32),
+    pub DEBUG: (u32, u32),
+    pub ARCHITECTURE: (u32, u32),
+    pub GLOBALPTR: (u32, u32),
+    pub TLSTABLE: (u32, u32),
+    pub LOADCONFIG: (u32, u32),
+    pub BOUNDIMPORT: (u32, u32),
+    pub IAT: (u32, u32),
+    pub DELAYIMPDESC: (u32, u32),
+    pub CLRRUNTIME: (u32, u32),
+    pub RESERVEDZERO: (u32, u32),
 }
 
 #[allow(dead_code)]
@@ -242,38 +242,38 @@ impl Display for OptHeaderDataDirectories {
         write!(
             f,
             "\n--------Data Directories--------\n\
-        Export:\t\t{:#x}\n\
-        Import:\t\t{:#x}\n\
-        Resource:\t{:#x}\n\
-        Exception:\t{:#x}\n\
-        Certificate:\t{:#x}\n\
-        Base Reloc:\t{:#x}\n\
-        Debug:\t\t{:#x}\n\
-        Architecture:\t{:#x}\n\
-        Global Ptr:\t{:#x}\n\
-        TLS:\t\t{:#x}\t\n\
-        Load Config:\t{:#x}\n\
-        Bound Import:\t{:#x}\n\
-        IAT:\t\t{:#x}\n\
-        Delay Import:\t{:#x}\n\
-        CLR Runtime:\t{:#x}\n\
-        ReservedZero:\t{:#x}\n",
-            self.EXPORTTABLE,
-            self.IMPORTTABLE,
-            self.RESOURCETABLE,
-            self.EXCEPTIONTABLE,
-            self.CERTTABLE,
-            self.BASERELOCATION,
-            self.DEBUG,
-            self.ARCHITECTURE,
-            self.GLOBALPTR,
-            self.TLSTABLE,
-            self.LOADCONFIG,
-            self.BOUNDIMPORT,
-            self.IAT,
-            self.DELAYIMPDESC,
-            self.CLRRUNTIME,
-            self.RESERVEDZERO
+        Export:\t\t{:#x}\t\t{:#}\n\
+        Import:\t\t{:#x}\t{:#}\n\
+        Resource:\t{:#x}\t\t{:#}\n\
+        Exception:\t{:#x}\t{:#}\n\
+        Certificate:\t{:#x}\t\t{:#}\n\
+        Base Reloc:\t{:#x}\t{:#}\n\
+        Debug:\t\t{:#x}\t{:#}\n\
+        Architecture:\t{:#x}\t\t{:#}\n\
+        Global Ptr:\t{:#x}\t\t{:#}\n\
+        TLS:\t\t{:#x}\t{:#}\n\
+        Load Config:\t{:#x}\t{:#}\n\
+        Bound Import:\t{:#x}\t\t{:#}\n\
+        IAT:\t\t{:#x}\t{:#}\n\
+        Delay Import:\t{:#x}\t\t{:#}\n\
+        CLR Runtime:\t{:#x}\t\t{:#}\n\
+        ReservedZero:\t{:#x}\t\t{:#}\n",
+            self.EXPORTTABLE.1, self.EXPORTTABLE.0,
+            self.IMPORTTABLE.1, self.IMPORTTABLE.0,
+            self.RESOURCETABLE.1, self.RESOURCETABLE.0,
+            self.EXCEPTIONTABLE.1, self.EXCEPTIONTABLE.0,
+            self.CERTTABLE.1, self.CERTTABLE.0,
+            self.BASERELOCATION.1, self.BASERELOCATION.0,
+            self.DEBUG.1, self.DEBUG.0,
+            self.ARCHITECTURE.1, self.ARCHITECTURE.0,
+            self.GLOBALPTR.1, self.GLOBALPTR.0,
+            self.TLSTABLE.1, self.TLSTABLE.0,
+            self.LOADCONFIG.1, self.LOADCONFIG.0,
+            self.BOUNDIMPORT.1, self.BOUNDIMPORT.0,
+            self.IAT.1, self.IAT.0,
+            self.DELAYIMPDESC.1, self.DELAYIMPDESC.0,
+            self.CLRRUNTIME.1, self.CLRRUNTIME.0,
+            self.RESERVEDZERO.1, self.RESERVEDZERO.0,
         )
     }
 }
