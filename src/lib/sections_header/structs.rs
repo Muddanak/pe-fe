@@ -33,39 +33,42 @@ pub struct SectionHeaderInfo {
     pub POINTERTORAWDATA: u32,
     pub POINTERTORELOCATIONS: u32,
     pub POINTERTOLINENUMBERS: u32,
-    pub NUMBEROFRELOCATIONS: u32,
-    pub NUMBEROFLINENUMBERS: u32,
+    pub NUMBEROFRELOCATIONS: u16,
+    pub NUMBEROFLINENUMBERS: u16,
     pub CHARACTERISTICS: String,
 }
 
 #[allow(dead_code)]
 impl SectionHeaderInfo {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Default::default()
     }
 }
 
 impl Display for SectionHeaderInfo {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Name:\t{}\n\
-        Virtual Size:\t{}\n\
-        Virtual Address:\t{}\
-        Size of Raw Data:\t{}\
-        Pointer to Raw:\t{}\
-        Pointer to Reloc:\t{}\
-        Pointer to Line Num:\t{}\
-        Number of Relocations:\t{}\
-        Number of Lines:\t{}\
-        Characteristics:\t{}\n",
-        self.NAME,
-        self.VIRTUALSIZE,
-        self.VIRTUALADDRESS,
-        self.SIZEOFRAWDATA,
-        self.POINTERTORAWDATA,
-        self.POINTERTORELOCATIONS,
-        self.POINTERTOLINENUMBERS,
-        self.NUMBEROFRELOCATIONS,
-        self.NUMBEROFLINENUMBERS,
-        self.CHARACTERISTICS)
+        write!(
+            f,
+            "Name:\t\t\t{}\n\
+        Virtual Size:\t\t{}\n\
+        Virtual Address:\t{:#x}\n\
+        Size of Raw Data:\t{}\n\
+        Pointer to Raw:\t\t{:#x}\n\
+        Pointer to Reloc:\t{:#x}\n\
+        Pointer to Line Num:\t{:#x}\n\
+        Number of Relocations:\t{}\n\
+        Number of Lines:\t{}\n\
+        Characteristics:\t{}\n\n",
+            String::from_utf8(Vec::from(u64::to_le_bytes(self.NAME))).unwrap(),
+            self.VIRTUALSIZE,
+            self.VIRTUALADDRESS,
+            self.SIZEOFRAWDATA,
+            self.POINTERTORAWDATA,
+            self.POINTERTORELOCATIONS,
+            self.POINTERTOLINENUMBERS,
+            self.NUMBEROFRELOCATIONS,
+            self.NUMBEROFLINENUMBERS,
+            self.CHARACTERISTICS
+        )
     }
 }
