@@ -242,22 +242,22 @@ impl Display for OptHeaderDataDirectories {
         write!(
             f,
             "\n--------Data Directories--------\n\
-        Export:\t\t{:#x}\t\t{:#}\n\
-        Import:\t\t{:#x}\t{:#}\n\
-        Resource:\t{:#x}\t\t{:#}\n\
-        Exception:\t{:#x}\t{:#}\n\
-        Certificate:\t{:#x}\t\t{:#}\n\
-        Base Reloc:\t{:#x}\t{:#}\n\
-        Debug:\t\t{:#x}\t{:#}\n\
-        Architecture:\t{:#x}\t\t{:#}\n\
-        Global Ptr:\t{:#x}\t\t{:#}\n\
-        TLS:\t\t{:#x}\t{:#}\n\
-        Load Config:\t{:#x}\t{:#}\n\
-        Bound Import:\t{:#x}\t\t{:#}\n\
-        IAT:\t\t{:#x}\t{:#}\n\
-        Delay Import:\t{:#x}\t\t{:#}\n\
-        CLR Runtime:\t{:#x}\t\t{:#}\n\
-        ReservedZero:\t{:#x}\t\t{:#}\n",
+        Export:\t\t{:#08x}| Size: {:#}\n\
+        Import:\t\t{:#08x}| Size: {:#}\n\
+        Resource:\t{:#08x}| Size: {:#}\n\
+        Exception:\t{:#08x}| Size: {:#}\n\
+        Certificate:\t{:#08x}| Size: {:#}\n\
+        Base Reloc:\t{:#08x}| Size: {:#}\n\
+        Debug:\t\t{:#08x}| Size: {:#}\n\
+        Architecture:\t{:#08x}| Size: {:#}\n\
+        Global Ptr:\t{:#08x}| Size: {:#}\n\
+        TLS:\t\t{:#08x}| Size: {:#}\n\
+        Load Config:\t{:#08x}| Size: {:#}\n\
+        Bound Import:\t{:#08x}| Size: {:#}\n\
+        IAT:\t\t{:#08x}| Size: {:#}\n\
+        Delay Import:\t{:#08x}| Size: {:#}\n\
+        CLR Runtime:\t{:#08x}| Size: {:#}\n\
+        ReservedZero:\t{:#08x}| Size: {:#}\n",
             self.EXPORTTABLE.1, self.EXPORTTABLE.0,
             self.IMPORTTABLE.1, self.IMPORTTABLE.0,
             self.RESOURCETABLE.1, self.RESOURCETABLE.0,
