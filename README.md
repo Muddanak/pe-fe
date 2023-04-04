@@ -1,15 +1,35 @@
 # pe-fe
+
+- [Description](#description)
+- [Usage](#usage)
+- [License](#license)
+
+## Description
+
 Analyze a PE file, written in Rust.
-<br><br>
-This CLI program will analyze a PE file and relay important information needed to analyze the file.
-<br><br>
-The DOS, COFF, Optional, Detail, Data Directories, and Section headers are parsed to view to output to the screen.
+
+This CLI program will analyze a PE file and relay important information needed to analyze the file. The DOS, COFF, Optional, Detail, Data Directories, and Section headers are parsed to view to output to the screen.
+
+This program was created to offer to the DFIR community another PE analyzer, written in Rust, to helpfully be used during analysis.  This project was also a form of practice to help learn the Rust language.
+
+
 ---
-# Usage
-<br>
-Display the help:<br>
-<blockquote>pe-fe.exe -h</blockquote>
-Analyze a file:<br>
-<blockquote>pe-fe.exe -f (Filename)</blockquote>
-Analyze a file and show all parsed headers:<br>
-<blockquote>pe-fe.exe -a -f (Filename)</blockquote>
+## Usage
+
+Display the help:
+```
+pe-fe.exe -h
+```
+Analyze a file:
+```
+pe-fe.exe -f (Filename)
+```
+Analyze a file and show all parsed headers:
+```
+pe-fe.exe -a -f (Filename)
+```
+
+---
+## License
+
+Released under the MIT License
