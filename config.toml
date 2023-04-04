@@ -1,5 +1,5 @@
 [package]
-author = "Muddanak"
+author = "Mudd"
 about = "A PE file analyzer written in Rust"
 
 [build]

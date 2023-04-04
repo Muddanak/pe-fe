@@ -2,7 +2,7 @@
 name = "pe-fe"
 version = "0.5.0"
 edition = "2021"
-authors = ["Muddanak"]
+authors = ["Mudd"]
 
 [profile.release]
 opt-level = 'z'     # Optimize for size

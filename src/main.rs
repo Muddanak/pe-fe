@@ -11,7 +11,7 @@ use pefelib::coff_header::make_coff_header;
 use pefelib::optional_header::make_optional_header;
 
 #[derive(Parser)]
-#[command(author = "Muddanak", version, long_about = None)]
+#[command(author = "Mudd", version, long_about = None)]
 #[command(about = "A PE file analyzer written in Rust")]
 struct Args {
     #[arg(short, long)]
