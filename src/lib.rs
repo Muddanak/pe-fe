@@ -7,7 +7,6 @@ pub use self::lib::utils;
 use crate::lib::coff_header::structs::CoffHeader;
 use crate::lib::dos_header::structs::DosHeader;
 use crate::lib::optional_header::structs::OptHeader;
-use crate::sections_header::structs::SectionHeader;
 
 pub mod lib {
     pub mod coff_header;
@@ -18,7 +17,7 @@ pub mod lib {
 }
 
 #[allow(dead_code)]
-pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &OptHeader, secheader: &SectionHeader) {
+pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &OptHeader) {
     println!("{dosheader}{coffheader}{optheader}");
     if optheader.MAGIC.eq(&0x20b) {
         println!("{}", optheader.WINDETAILSPLUS)
@@ -26,22 +25,22 @@ pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &
         println!("{}", optheader.WINDETAILS32)
     }
     println!("{}", optheader.DATADIRECTORIES);
-    println!("{}", secheader);
 }
 
 #[cfg(test)]
 mod tests {
-    use std::{env, fs, process};
-    use std::fs::File;
-    use std::io::{BufReader, Read};
     use crate::coff_header::make_coff_header;
     use crate::dos_header::{check_for_mz, make_dos_header};
     use crate::optional_header::make_optional_header;
     use crate::sections_header::make_section_header;
+    use std::fs::File;
+    use std::io::{BufReader, Read};
+    use std::{env, fs, process};
 
     #[test]
     fn test_lots() {
-        let paths = fs::read_dir(env::var("PEFILES64").unwrap()).unwrap()
+        let paths = fs::read_dir(env::var("PEFILES64").unwrap())
+            .unwrap()
             .filter(|x| x.as_ref().unwrap().path().extension() == Some("dat".as_ref()));
 
         for item in paths {
@@ -71,9 +70,6 @@ mod tests {
             let secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
 
             //show_headers(&header_dos.0, &header_coff, &header_opt, &secheader);
-
-
         }
-
     }
 }

@@ -1,6 +1,6 @@
-use byteorder::{ByteOrder, LittleEndian};
 use crate::sections_header::enums::CHARACTERISTICS;
 use crate::sections_header::structs::{SectionHeader, SectionHeaderInfo};
+use byteorder::{ByteOrder, LittleEndian};
 
 pub(crate) mod enums;
 pub(crate) mod structs;
@@ -8,27 +8,27 @@ pub(crate) mod structs;
 pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> SectionHeader {
     let mut secheader = SectionHeader::default();
     let mut sections: Vec<SectionHeaderInfo> = vec![];
-    let mut cur= offset;
+    let mut cur = offset;
 
     for _ in 0..num_sections {
         let mut tmpinfo = SectionHeaderInfo::new();
-        tmpinfo.NAME = LittleEndian::read_u64(&data[cur..cur+8]);
+        tmpinfo.NAME = LittleEndian::read_u64(&data[cur..cur + 8]);
         cur += 8;
-        tmpinfo.VIRTUALSIZE = LittleEndian::read_u32(&data[cur..cur+4]);
+        tmpinfo.VIRTUALSIZE = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += 4;
-        tmpinfo.VIRTUALADDRESS = LittleEndian::read_u32(&data[cur..cur+4]);
+        tmpinfo.VIRTUALADDRESS = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += 4;
-        tmpinfo.SIZEOFRAWDATA = LittleEndian::read_u32(&data[cur..cur+4]);
+        tmpinfo.SIZEOFRAWDATA = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += 4;
-        tmpinfo.POINTERTORAWDATA = LittleEndian::read_u32(&data[cur..cur+4]);
+        tmpinfo.POINTERTORAWDATA = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += 4;
-        tmpinfo.POINTERTORELOCATIONS = LittleEndian::read_u32(&data[cur..cur+4]);
+        tmpinfo.POINTERTORELOCATIONS = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += 4;
-        tmpinfo.POINTERTOLINENUMBERS = LittleEndian::read_u32(&data[cur..cur+4]);
+        tmpinfo.POINTERTOLINENUMBERS = LittleEndian::read_u32(&data[cur..cur + 4]);
         cur += 4;
-        tmpinfo.NUMBEROFRELOCATIONS = LittleEndian::read_u16(&data[cur..cur+2]);
+        tmpinfo.NUMBEROFRELOCATIONS = LittleEndian::read_u16(&data[cur..cur + 2]);
         cur += 2;
-        tmpinfo.NUMBEROFLINENUMBERS = LittleEndian::read_u16(&data[cur..cur+2]);
+        tmpinfo.NUMBEROFLINENUMBERS = LittleEndian::read_u16(&data[cur..cur + 2]);
         cur += 2;
 
         let mut tmpvec: Vec<String> = Vec::new();
@@ -45,4 +45,8 @@ pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> S
     }
     secheader.HEADER = sections;
     secheader
+}
+
+pub fn print_section_headers(secheader: &SectionHeader) {
+    println!("{}", secheader);
 }
