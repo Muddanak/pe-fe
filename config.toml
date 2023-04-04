@@ -1,5 +1,6 @@
 [package]
 author = "Muddanak"
+about = "A PE file analyzer written in Rust"
 
 [build]
 rustflags = ['--remap-path-prefix', 'C:\pe-fe=.\ ']
