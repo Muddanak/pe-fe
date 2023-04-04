@@ -10,11 +10,17 @@ use pefelib::dos_header::{check_for_mz, make_dos_header, print_rich_sha256_hash}
 use pefelib::coff_header::make_coff_header;
 use pefelib::optional_header::make_optional_header;
 
-#[derive(Parser, Debug)]
-#[command(author, version)]
+#[derive(Parser)]
+#[command(name="pe-fe")]
+#[command(author="Muddanak")]
+#[command(version)]
+#[command(about="A PE file analyzer written in Rust")]
 struct Args {
     #[arg(short, long)]
     filename: String,
+
+    #[arg(short, long)]
+    show_rich_hash: bool,
 }
 
 fn main() -> io::Result<()> {
