@@ -11,7 +11,8 @@ use pefelib::coff_header::make_coff_header;
 use pefelib::optional_header::make_optional_header;
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+#[command(author = "Muddanak", version, long_about = None)]
+#[command(about = "A PE file analyzer written in Rust")]
 struct Args {
     #[arg(short, long)]
     ///Filename to analyze
@@ -25,8 +26,8 @@ struct Args {
     ///Show the Sections header
     section_header: bool,
 
-    #[arg(short = 'a', long = "all")]
     ///Show all header info parsed
+    #[arg(short = 'a', long = "all")]
     show_all: bool,
 }
 
