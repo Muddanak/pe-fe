@@ -14,16 +14,12 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
 
     header.mz_offset = mz_found; //should be 0x00
     header.pe_offset = LittleEndian::read_u32(&data[cur..cur + 4]) as usize;
-    //println!("Cursor: {:#04x}", cur);
     cur += 0x04; //cur = 64/0x40
     header.has_stub = check_for_stub(&data[cur..header.pe_offset]); //Read from data[64] to end
     if header.has_stub {
         cur += 0x40;
     }
 
-    //println!("PE offset at {:#x}", header.pe_offset);
-    //println!("Offset is currently at {:#x}", cur);
-    //println!("Made it past stub, got {} and PE is {} and cursor is {}", header.has_stub, header.pe_offset, cur);
 
     header.rich_xor_key = get_rich_xor_key(&data[cur..header.pe_offset]);
     if header.rich_xor_key != 0 {
@@ -35,23 +31,12 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
 }
 
 fn check_for_stub(data: &[u8]) -> bool {
-    //let offset = index_of_string_in_u8(data, "This program");
-
     "This program".bytes().all(|x| data.contains(&x))
 }
 
 fn get_rich_xor_key(data: &[u8]) -> u32 {
-    //let offset = index_of_string_in_u8(data, "Rich");
     let newdata = bytes_to_hex_string(data);
-    //println!("newdata is {newdata}");
     let offset = index_hex_string_in_hex_data(newdata, bytes_to_hex_string(b"Rich"));
-    //println!("Rich may be at {:#x}", offset);
-    /*let mut offset = 0;
-    if "Rich".chars().all(|x| data.contains(&(x as u8)))
-    {
-        data.iter().find(|x| "Rich".as_bytes().contains())
-    }*/
-    //println!("Rich: {:#04x}", offset);
 
     if offset != 0 {
         BigEndian::read_u32(&data[offset + 4..offset + 8])
@@ -79,7 +64,6 @@ fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
 }
 
 pub fn print_rich_sha256_hash(header: &DosHeader) {
-    //println!("\n---------------------------\nRich ID Information");
     let val = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes()));
     let mut signature = String::new();
     if val.is_ok() {

@@ -194,6 +194,5 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> (OptHeader, usize) {
         optheader.DATADIRECTORIES = wind;
     }
 
-    //println!("{cur}");
     (optheader, cur)
 }

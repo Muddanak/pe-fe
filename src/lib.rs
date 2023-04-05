@@ -69,7 +69,6 @@ mod tests {
 
             let secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
 
-            //show_headers(&header_dos.0, &header_coff, &header_opt, &secheader);
         }
     }
 }
