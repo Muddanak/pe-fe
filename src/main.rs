@@ -59,11 +59,11 @@ fn main() -> io::Result<()> {
 
     show_headers(&header_dos.0, &header_coff, &header_opt);
 
-    if args.section_header.eq(&true) || args.show_all.eq(&true) {
+    if args.section_header.eq(&true) || args.show_all {
         print_section_headers(&secheader);
     }
 
-    if header_dos.0.has_rich && (args.rich_hash.eq(&true) || args.show_all.eq(&true)) {
+    if header_dos.0.has_rich && (args.rich_hash.eq(&true) || args.show_all) {
         print_rich_sha256_hash(&header_dos.0);
     }
 

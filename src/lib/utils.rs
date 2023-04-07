@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn test_match_u16_in_map() {
-        assert_eq!(match_u16_in_map(&MAP_TEST_1, 0x0101), "Test");
+        assert_eq!(match_gen_in_map(&MAP_TEST_1, 0x0101), "Test");
     }
 
     #[test]
