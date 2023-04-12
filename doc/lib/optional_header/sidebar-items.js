@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["make_optional_header","Takes in the slice of the buffered data and where the offset for the optional header is located"]]};

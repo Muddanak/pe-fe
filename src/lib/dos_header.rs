@@ -8,6 +8,14 @@ use sha2::Digest;
 pub(crate) mod enums;
 pub(crate) mod structs;
 
+/// Takes in the slice of the buffered data and where the offset for the MZ spot is located, just in case it's not 0.
+///
+/// Return a built DosHeader based on the file opened, if it's a proper image
+///
+///  # Example
+///
+/// let dosHead = make_dos_header(&buffer, 0x3c);
+///
 pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
     let mut header = DosHeader::new();
     let mut cur: usize = 0x3c; //cur = 60
@@ -63,6 +71,15 @@ fn get_rich_data(data: &[u8], key: u32) -> Vec<u32> {
     rich_ids
 }
 
+///
+/// Prints the SHA256 hash of the "Rich" header if found within the image file
+///
+/// Is called by command line argument
+///
+/// # Example
+///
+/// print_rich_sha256_hash(&dosHead);
+///
 pub fn print_rich_sha256_hash(header: &DosHeader) {
     let val = String::from_utf8(Vec::from(header.rich_ids[0].to_be_bytes()));
     let mut signature = String::new();
@@ -86,16 +103,13 @@ pub fn print_rich_sha256_hash(header: &DosHeader) {
 }
 
 ///
+/// Checks the image file for the MZ header
 ///
-/// check_for_mz
-/// Takes: a reference to a slice of u8
-/// Ex: &[u8]
+/// Returns a Result of the offset of the location, or an error if it's not found of type PEFILEERROR:NoMZinFile
 ///
-/// Returns a Result of either Ok(()) or Errors out with a FileError
-/// FileError is of variant: NoMZinFile
+/// # Example
 ///
-/// Concept:  Grabs the first two characters of the
-///
+/// let offset = check_for_mz(&buffer)?;
 ///
 pub fn check_for_mz(chunk: &[u8]) -> Result<usize, PEFILEERROR> {
     let data = &chunk[..2];

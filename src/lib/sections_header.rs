@@ -5,6 +5,15 @@ use byteorder::{ByteOrder, LittleEndian};
 pub(crate) mod enums;
 pub(crate) mod structs;
 
+/// Takes in the slice of the buffered data and where the offset for the section headers and
+/// the number of sections extracted from before.
+///
+/// Return a built SectionHeader based on the file opened, if it's a proper image
+///
+///  # Example
+///
+/// let sectHead = make_section_header(&buffer, 0x180, 0x05);
+///
 pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> SectionHeader {
     let mut secheader = SectionHeader::default();
     let mut sections: Vec<SectionHeaderInfo> = vec![];
@@ -47,6 +56,15 @@ pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> S
     secheader
 }
 
+///
+/// Prints the section headers found within the image
+///
+/// Called by command line argument
+///
+/// # Example
+///
+/// print_section_headers(&sectionHead);
+///
 pub fn print_section_headers(secheader: &SectionHeader) {
     println!("{}", secheader);
 }

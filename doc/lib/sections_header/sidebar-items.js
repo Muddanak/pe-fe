@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["make_section_header","Takes in the slice of the buffered data and where the offset for the section headers and the number of sections extracted from before."],["print_section_headers","Prints the section headers found within the image"]]};

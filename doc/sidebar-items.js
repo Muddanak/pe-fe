@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["show_headers","When given built header structs, this function displays the formatted output from each struct"]],"mod":[["lib",""]]};

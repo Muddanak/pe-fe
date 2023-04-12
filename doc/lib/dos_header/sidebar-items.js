@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["check_for_mz","Checks the image file for the MZ header"],["make_dos_header","Takes in the slice of the buffered data and where the offset for the MZ spot is located, just in case it’s not 0."],["print_rich_sha256_hash","Prints the SHA256 hash of the “Rich” header if found within the image file"]]};

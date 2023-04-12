@@ -15,8 +15,12 @@ pub mod lib {
     pub mod sections_header;
     pub mod utils;
 }
-
-#[allow(dead_code)]
+/// When given built header structs, this function displays the formatted output from each struct
+///
+///  # Example
+///
+/// show_headers(&dosHead, &coffHead, &optHead);
+///
 pub fn show_headers(dosheader: &DosHeader, coffheader: &CoffHeader, optheader: &OptHeader) {
     println!("{dosheader}{coffheader}{optheader}");
     if optheader.MAGIC.eq(&0x20b) {
@@ -39,6 +43,7 @@ mod tests {
 
     #[test]
     fn test_lots() {
+        //PEFILES64 is an environmental variable pointing to a large testbed of 64-bit-built IMG files
         let paths = fs::read_dir(env::var("PEFILES64").unwrap())
             .unwrap()
             .filter(|x| x.as_ref().unwrap().path().extension() == Some("dat".as_ref()));
@@ -65,9 +70,9 @@ mod tests {
 
             cursor += 20;
 
-            let (header_opt, cursor) = make_optional_header(&buffer, cursor);
+            let (_header_opt, cursor) = make_optional_header(&buffer, cursor);
 
-            let secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
+            let _secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
 
         }
     }

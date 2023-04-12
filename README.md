@@ -22,11 +22,11 @@ pe-fe.exe -h
 ```
 Analyze a file:
 ```
-pe-fe.exe -f (Filename)
+pe-fe.exe (Filename)
 ```
 Analyze a file and show all parsed headers:
 ```
-pe-fe.exe -a -f (Filename)
+pe-fe.exe -a (Filename)
 ```
 
 ---

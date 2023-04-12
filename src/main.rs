@@ -13,8 +13,8 @@ use pefelib::optional_header::make_optional_header;
 #[derive(Parser)]
 #[command(author = "Mudd", version, long_about = None)]
 #[command(about = "A PE file analyzer written in Rust")]
+#[command(arg_required_else_help = true, propagate_version = true)]
 struct Args {
-    #[arg(short, long)]
     ///Filename to analyze
     filename: String,
 

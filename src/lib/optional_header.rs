@@ -8,6 +8,14 @@ use byteorder::{ByteOrder, LittleEndian};
 pub(crate) mod enums;
 pub(crate) mod structs;
 
+/// Takes in the slice of the buffered data and where the offset for the optional header is located
+///
+/// Return a built optHeader based on the file opened, if it's a proper image
+///
+///  # Example
+///
+/// let optHead = make_optional_header(&buffer, 0x3c);
+///
 pub fn make_optional_header(data: &[u8], cursor: usize) -> (OptHeader, usize) {
     let mut optheader = OptHeader::new();
     let mut cur: usize = cursor;
