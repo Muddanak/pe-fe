@@ -4,6 +4,13 @@ version = "0.5.2"
 edition = "2021"
 authors = ["Mudd"]
 
+[lib]
+path = 'src/lib.rs'
+
+[[bin]]
+path = 'src/main.rs'
+name = "pe-fe"
+
 [profile.release]
 opt-level = 'z'     # Optimize for size
 lto = true          # Enable link-time optimization

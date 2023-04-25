@@ -1,13 +1,16 @@
 use std::fmt::{Display, Formatter};
+use druid::Data;
 
 #[allow(dead_code)]
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Default, PartialEq, Data)]
 pub struct DosHeader {
     pub mz_offset: usize,
     pub pe_offset: usize,
     pub has_stub: bool,
     pub has_rich: bool,
     pub rich_xor_key: u32,
+
+    #[data(eq)]
     pub rich_ids: Vec<u32>,
 }
 

@@ -2,6 +2,7 @@ pub use self::lib::coff_header;
 pub use self::lib::dos_header;
 pub use self::lib::optional_header;
 pub use self::lib::sections_header;
+pub use self::lib::pefegui;
 pub use self::lib::utils;
 
 use crate::lib::coff_header::structs::CoffHeader;
@@ -9,6 +10,7 @@ use crate::lib::dos_header::structs::DosHeader;
 use crate::lib::optional_header::structs::OptHeader;
 
 pub mod lib {
+    pub mod pefegui;
     pub mod coff_header;
     pub mod dos_header;
     pub mod optional_header;

@@ -2,13 +2,18 @@ use clap::{arg, Parser};
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::{io, process};
+use druid::{AppLauncher, LocalizedString, WindowDesc};
 
 use pe_fe::sections_header::{make_section_header, print_section_headers};
 use pe_fe::{lib as pefelib, show_headers};
+use pe_fe::pefegui::build_root_widget;
+use pe_fe::pefegui::structs::PefeApp;
 use pefelib::dos_header::{check_for_mz, make_dos_header, print_rich_sha256_hash};
 
 use pefelib::coff_header::make_coff_header;
 use pefelib::optional_header::make_optional_header;
+
+const WINDOW_NAME: &str = "Pe-fe - A PE File Analyzer";
 
 #[derive(Parser)]
 #[command(author = "Mudd", version, long_about = None)]
@@ -67,5 +72,20 @@ fn main() -> io::Result<()> {
         print_rich_sha256_hash(&header_dos.0);
     }
 
+    let appstate = PefeApp {
+        name: "PE File Analyzer".to_string(),
+        dos_head: header_dos.0,
+        current_tab: 0,
+    };
+
+    let main_window = WindowDesc::new(build_root_widget())
+        .title(LocalizedString::new(WINDOW_NAME))
+        .window_size((600.0, 400.0));
+
+    AppLauncher::with_window(main_window)
+        .launch(appstate)
+        .expect("Failed to launch application");
+
     Ok(())
+
 }
