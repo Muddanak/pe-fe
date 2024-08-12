@@ -16,6 +16,7 @@ impl SectionHeader {
 impl Display for SectionHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "\n--------Section Headers--------\n")?;
+        #[allow(clippy::unused_enumerate_index)]
         for (_count, item) in self.HEADER.iter().enumerate() {
             write!(f, "{}", item)?
         }

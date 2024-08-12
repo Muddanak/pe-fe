@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::lib::coff_header::enums::{CHARACTERISTICS, MACHINE};
 use crate::lib::coff_header::structs::CoffHeader;
 use crate::lib::utils::match_gen_in_map;
@@ -15,7 +17,7 @@ pub(crate) mod structs;
 ///
 /// let coffHead = make_coff_header(&buffer, 0x3c);
 ///
-pub fn make_coff_header(data: &[u8], offset: usize) -> CoffHeader {
+pub fn make_coff_header(data: &[u8], offset: usize) -> Result<CoffHeader, Box<dyn Error>> {
     let mut coffheader = CoffHeader::new();
     let mut characteristics_vec: Vec<String> = Vec::new();
 
@@ -51,6 +53,6 @@ pub fn make_coff_header(data: &[u8], offset: usize) -> CoffHeader {
             .unwrap()
     );
 
-    coffheader
+    Ok(coffheader)
 }
 

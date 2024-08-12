@@ -42,7 +42,7 @@ mod tests {
     use std::{env, fs, process};
 
     #[test]
-    fn test_lots() {
+    fn test_lots() -> Result<(), Box<dyn std::error::Error>> {
         //PEFILES64 is an environmental variable pointing to a large testbed of 64-bit-built IMG files
         let paths = fs::read_dir(env::var("PEFILES64").unwrap())
             .unwrap()
@@ -62,18 +62,18 @@ mod tests {
                 }
             };
 
-            let header_dos = make_dos_header(&buffer, mz_offset);
+            let header_dos = make_dos_header(&buffer, mz_offset)?;
 
             let mut cursor = header_dos.0.pe_offset + 4;
 
-            let header_coff = make_coff_header(&buffer, cursor);
+            let header_coff = make_coff_header(&buffer, cursor)?;
 
             cursor += 20;
 
-            let (_header_opt, cursor) = make_optional_header(&buffer, cursor);
+            let (_header_opt, cursor) = make_optional_header(&buffer, cursor)?;
 
             let _secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
-
         }
+        Ok(())
     }
 }

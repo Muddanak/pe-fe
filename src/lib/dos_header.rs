@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::coff_header::enums::PEFILEERROR;
 use crate::coff_header::enums::PEFILEERROR::NoMZinFile;
 use crate::dos_header::structs::DosHeader;
@@ -16,7 +18,7 @@ pub(crate) mod structs;
 ///
 /// let dosHead = make_dos_header(&buffer, 0x3c);
 ///
-pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
+pub fn make_dos_header(data: &[u8], mz_found: usize) -> Result<(DosHeader, usize), Box<dyn Error>> {
     let mut header = DosHeader::new();
     let mut cur: usize = 0x3c; //cur = 60
 
@@ -35,7 +37,7 @@ pub fn make_dos_header(data: &[u8], mz_found: usize) -> (DosHeader, usize) {
         header.rich_ids = get_rich_data(&data[cur..header.pe_offset], header.rich_xor_key);
     }
 
-    (header, cur)
+    Ok((header, cur))
 }
 
 fn check_for_stub(data: &[u8]) -> bool {

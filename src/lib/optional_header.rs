@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::optional_header::enums::{DLL_CHARACTERISTICS, MAGIC, SUBSYSTEM};
 use crate::optional_header::structs::{
     OptHeader, OptHeaderDataDirectories, OptHeaderPE32Details, OptHeaderPE32PlusDetails,
@@ -16,7 +18,7 @@ pub(crate) mod structs;
 ///
 /// let optHead = make_optional_header(&buffer, 0x3c);
 ///
-pub fn make_optional_header(data: &[u8], cursor: usize) -> (OptHeader, usize) {
+pub fn make_optional_header(data: &[u8], cursor: usize) -> Result<(OptHeader, usize), Box<dyn Error>> {
     let mut optheader = OptHeader::new();
     let mut cur: usize = cursor;
 
@@ -202,5 +204,5 @@ pub fn make_optional_header(data: &[u8], cursor: usize) -> (OptHeader, usize) {
         optheader.DATADIRECTORIES = wind;
     }
 
-    (optheader, cur)
+    Ok((optheader, cur))
 }

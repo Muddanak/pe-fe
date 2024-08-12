@@ -1,7 +1,7 @@
 use clap::{arg, Parser};
+use std::error::Error;
 use std::fs::File;
 use std::io::{BufReader, Read};
-use std::{io, process};
 
 use pe_fe::sections_header::{make_section_header, print_section_headers};
 use pe_fe::{lib as pefelib, show_headers};
@@ -18,11 +18,11 @@ struct Args {
     ///Filename to analyze
     filename: String,
 
-    #[arg(short, long="rich")]
+    #[arg(short, long = "rich")]
     ///Show the 'Rich' header hash
     rich_hash: bool,
 
-    #[arg(short, long="section")]
+    #[arg(short, long = "section")]
     ///Show the Sections header
     section_header: bool,
 
@@ -31,31 +31,35 @@ struct Args {
     show_all: bool,
 }
 
-fn main() -> io::Result<()> {
+fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
+
+    if args.filename.is_empty() {
+        return Ok(())
+    }
+
     let mut reader = BufReader::new(File::open(args.filename)?);
     let mut buffer = [0; 0x800];
     let _size_read = reader.read(&mut buffer)?;
 
-    let mz_offset = match check_for_mz(&buffer) {
+    /* let mz_offset = match check_for_mz(&buffer) {
         Ok(offset) => offset,
-        Err(e) => {
-            println!("{e}");
-            process::exit(1)
-        }
-    };
+        Err(e) => Err(e),
+    }; */
 
-    let header_dos = make_dos_header(&buffer, mz_offset);
+    let mz_offset = check_for_mz(&buffer)?;
+
+    let header_dos = make_dos_header(&buffer, mz_offset)?;
 
     let mut cursor = header_dos.0.pe_offset + 4;
 
-    let header_coff = make_coff_header(&buffer, cursor);
+    let header_coff = make_coff_header(&buffer, cursor)?;
 
     cursor += 20;
 
-    let (header_opt, cursor) = make_optional_header(&buffer, cursor);
+    let (header_opt, cursor) = make_optional_header(&buffer, cursor)?;
 
-    let secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize);
+    let secheader = make_section_header(&buffer, cursor, header_coff.HE_SECTIONS as usize)?;
 
     show_headers(&header_dos.0, &header_coff, &header_opt);
 

@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::sections_header::enums::CHARACTERISTICS;
 use crate::sections_header::structs::{SectionHeader, SectionHeaderInfo};
 use byteorder::{ByteOrder, LittleEndian};
@@ -14,7 +16,7 @@ pub(crate) mod structs;
 ///
 /// let sectHead = make_section_header(&buffer, 0x180, 0x05);
 ///
-pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> SectionHeader {
+pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> Result<SectionHeader, Box<dyn Error>> {
     let mut secheader = SectionHeader::default();
     let mut sections: Vec<SectionHeaderInfo> = vec![];
     let mut cur = offset;
@@ -53,7 +55,7 @@ pub fn make_section_header(data: &[u8], offset: usize, num_sections: usize) -> S
         cur += 4;
     }
     secheader.HEADER = sections;
-    secheader
+    Ok(secheader)
 }
 
 ///
